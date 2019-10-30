@@ -1,0 +1,57 @@
+﻿<Window x:Class="MasterMind.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MasterMind"
+        mc:Ignorable="d"
+        Title="MasterMind"
+		SizeToContent="WidthAndHeight"
+		MinHeight="400"
+		MinWidth="300">
+    <DockPanel LastChildFill="True">
+		<!-- Buttons and Input -->
+		<StackPanel Orientation="Horizontal"
+					Margin="5 0 0 5"
+					DockPanel.Dock="Bottom">
+			<StackPanel.Resources>
+				<Style TargetType="Button">
+					<Setter Property="Margin" Value="0 0 5 0" />
+				</Style>
+				<Style TargetType="TextBox">
+					<Setter Property="Width" Value="25" />
+					<Setter Property="Margin" Value="0 0 5 0" />
+					<Setter Property="MaxLength" Value="1" />
+					<Setter Property="TextAlignment" Value="Center" />
+				</Style>
+			</StackPanel.Resources>
+			<TextBox Text="{Binding ValueOne}" />
+			<TextBox Text="{Binding ValueTwo}" />
+			<TextBox Text="{Binding ValueThree}" />
+			<TextBox Text="{Binding ValueFour}" />
+			<Button Content="Guess" />
+			<Button Content="New game" />
+		</StackPanel>
+		<ScrollViewer DockPanel.Dock="Top"
+					  VerticalScrollBarVisibility="Auto">
+			<ListView Margin="10"
+					  ItemsSource="{Binding Attempts}">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn Header="1" Width="40" DisplayMemberBinding="{Binding valueOne}" />
+						<GridViewColumn Header="2" Width="40" DisplayMemberBinding="{Binding valueTwo}" />
+						<GridViewColumn Header="3" Width="40" DisplayMemberBinding="{Binding valueThree}" />
+						<GridViewColumn Header="4" Width="40" DisplayMemberBinding="{Binding valueFour}" />
+						<GridViewColumn Header="Hints" Width="100">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Hints}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</ListView.View>
+			</ListView>
+		</ScrollViewer>
+    </DockPanel>
+</Window>
