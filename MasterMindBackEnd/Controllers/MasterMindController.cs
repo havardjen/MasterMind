@@ -12,19 +12,47 @@ namespace MasterMindBackEnd.Controllers
 		public MasterMindController()
 		{
 			_gameTypeAccessor = new GameTypeAccess();
+			_gameAccessor = new GameAccess();
+			_charactersAccess = new CharactersAccess();
 		}
 		private IGameTypeAccess _gameTypeAccessor;
+		private IGameAccess _gameAccessor;
+		private ICharactersAccess _charactersAccess;
 
 		[HttpGet, Route("")]
 		public string Get()
 		{
-			return "Testing 1 2 3";
+			return "Welcome to this super incredible amazing relatively ok MasterMind service";
 		}
 
 		[HttpGet, Route("ValidCharacters")]
 		public List<string> GetValidCharacters()
 		{
-			return new List<string>() { "A", "B", "C", "D", "E", "F" };
+			return _charactersAccess.GetCharacter(string.Empty, true);
+		}
+
+
+		[HttpGet, Route("Game/Create")]
+		public int CreateGame()
+		{
+			return _gameAccessor.CreateGame();
+		}
+
+		[HttpGet, Route("Game/{gameId}")]
+		public List<string> GetGame(int gameId)
+		{
+			return _gameAccessor.GetGame(gameId);
+		}
+
+		[HttpPost, Route("Game/Attempt/{att}")]
+		public string AttemptGame(string att)
+		{
+			string[] arString = att.Split('_');
+			int gameId = int.Parse(arString[0]);
+			List<string> attempt = new List<string> { arString[1][0].ToString(), arString[1][1].ToString(), arString[1][2].ToString(), arString[1][3].ToString() };
+			_gameAccessor.RegisterAttempt(gameId, attempt);
+
+			return _gameAccessor.GetHints(gameId, attempt);
 		}
 
 

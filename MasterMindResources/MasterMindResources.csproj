@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Interfaces\ICharactersAccess.cs" />
+    <Compile Include="Interfaces\IGameAccess.cs" />
     <Compile Include="Interfaces\IGameTypeAccess.cs" />
     <Compile Include="Models\Attempt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

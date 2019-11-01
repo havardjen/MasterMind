@@ -30,7 +30,7 @@ namespace MasterMindDataAccess.Tests
 		public void GetGameType_GameTypeExists_GameTypeReturned()
 		{
 			// Arrange
-			int gameTypeId = 2;
+			int gameTypeId = 14;  // Volatile... For now, we accept the risk that all types might be deleted, and new ids come into play.
 			string expectedGameType = "Game";
 
 			// Act
@@ -45,7 +45,7 @@ namespace MasterMindDataAccess.Tests
 		{
 			// Arrange
 			string gameType = "Game";
-			int expectedGameTypeId = 2;
+			int expectedGameTypeId = 14;  // Volatile... For now, we accept the risk that all types might be deleted, and new ids come into play.
 
 			// Act
 			int gameTypeId = _gameTypeAccessor.GetGameTypeIdByGameType(gameType);

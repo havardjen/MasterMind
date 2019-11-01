@@ -76,6 +76,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharactersAccessTests.cs" />
+    <Compile Include="GameAccessTests.cs" />
     <Compile Include="GameTypeAccessTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

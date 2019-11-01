@@ -1,10 +1,13 @@
 ﻿
+using MasterMindResources.Commands;
+using MasterMindResources.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Windows.Input;
 
 namespace MasterMindResources.ViewModels
 {
@@ -14,15 +17,41 @@ namespace MasterMindResources.ViewModels
 		{
 			_client = new HttpClient();
 			_baseURL = "https://localhost:44351/api/MasterMind";
+			_gameId = -1;
+			Attempts = new List<Attempt>();
 
-			//GetGameType(2);
-			//CreateGameType("Viskelærbelte");
+
 			GetValidCharacters();
+			CreateGameCommand = new GeneralNoParameterCommand(CreateGame);
+			AttemptGameCommand = new GeneralNoParameterCommand(() =>
+			{
+				string completeAttempt = $"{_gameId}_{ValueOne}{ValueTwo}{ValueThree}{ValueFour}";
+				AttemptGame(completeAttempt);
+			});
 		}
 
 		private string _baseURL;
-		HttpClient _client;
-		List<string> _validCharacters;
+		private HttpClient _client;
+		private List<string> _validCharacters;
+		private int _gameId;
+		private string _hints;
+
+
+		#region Properties
+
+		public string ValueOne { get; set; }
+		public string ValueTwo { get; set; }
+		public string ValueThree { get; set; }
+		public string ValueFour { get; set; }
+
+		public bool CanGuessGame { get { return _gameId > 0; } }
+		public List<Attempt> Attempts { get; set; }
+
+		public ICommand CreateGameCommand { get; set; }
+		public ICommand AttemptGameCommand { get; set; }
+
+		#endregion
+
 
 		public async void GetValidCharacters()
 		{
@@ -34,7 +63,6 @@ namespace MasterMindResources.ViewModels
 				_validCharacters = JsonConvert.DeserializeObject<List<string>>(await response.Content.ReadAsStringAsync());
 		}
 
-
 		public async void GetGameType(int gameTypeId)
 		{
 			string gameType = string.Empty;
@@ -43,7 +71,6 @@ namespace MasterMindResources.ViewModels
 
 			if(response.IsSuccessStatusCode)
 				gameType = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
-
 		}
 
 		public async void CreateGameType(string gameType)
@@ -59,6 +86,43 @@ namespace MasterMindResources.ViewModels
 				string responseBody = await response.Content.ReadAsStringAsync();
 				gameTypeId = int.Parse(responseBody);
 			}
+		}
+
+		public async void CreateGame()
+		{
+			string createGameURL = $"{_baseURL}/Game/Create";
+			HttpResponseMessage response = await _client.GetAsync(createGameURL);
+
+			if (response.IsSuccessStatusCode)
+				_gameId = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
+
+			OnPropertyChanged("CanGuessGame");
+		}
+
+		public async void AttemptGame(string completeAttempt)
+		{
+			string attemptGameURL = $"{_baseURL}/Game/Attempt/{completeAttempt}";
+
+			StringContent queryString = new StringContent(completeAttempt);
+			HttpResponseMessage response = await _client.PostAsync(new Uri(attemptGameURL), queryString);
+
+			_hints = string.Empty;
+			if (response.IsSuccessStatusCode)
+			{
+				_hints = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
+			}
+
+			Attempt newAttempt = new Attempt
+			{
+				ValueOne = ValueOne,
+				ValueTwo = ValueTwo,
+				ValueThree = ValueThree,
+				ValueFour = ValueFour,
+				Hints = _hints
+			};
+
+			Attempts.Add(newAttempt);
+			OnPropertyChanged("Attempts");
 		}
 	}
 }
