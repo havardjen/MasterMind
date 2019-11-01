@@ -113,6 +113,28 @@ namespace MasterMindDataAccess.Tests
 		}
 
 		[Fact]
+		public void GetHints_AllCharsCorrPossLowerCase_ResultReturned()
+		{
+			// Arrange
+			int gameId = _gameAccessor.CreateGame();
+			List<string> game = _gameAccessor.GetGame(gameId);
+
+			List<string> attempt = new List<string>();
+			attempt.Add(game[0].ToLower());
+			attempt.Add(game[1].ToLower());
+			attempt.Add(game[2].ToLower());
+			attempt.Add(game[3].ToLower());
+
+			string expectedHints = "BBBB";
+
+			// Act
+			string hints = _gameAccessor.GetHints(gameId, attempt);
+
+			// Assert
+			Assert.Equal(expectedHints, hints);
+		}
+
+		[Fact]
 		public void GetHints_ThreeCorrectOneMissing_ResultReturned()
 		{
 			// Arrange

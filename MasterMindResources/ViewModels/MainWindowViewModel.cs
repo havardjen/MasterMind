@@ -35,11 +35,19 @@ namespace MasterMindResources.ViewModels
 		private List<string> _validCharacters;
 		private int _gameId;
 		private string _hints;
-
+		private string _valueOne;
 
 		#region Properties
 
-		public string ValueOne { get; set; }
+		public string ValueOne 
+		  { 
+		   get { return _valueOne; }
+		   set
+			{
+				_valueOne = value;
+				OnPropertyChanged("ValueOne");
+			}
+		  }
 		public string ValueTwo { get; set; }
 		public string ValueThree { get; set; }
 		public string ValueFour { get; set; }
@@ -101,6 +109,14 @@ namespace MasterMindResources.ViewModels
 
 		public async void AttemptGame(string completeAttempt)
 		{
+			ValueOne = ValueOne.ToUpper();
+			ValueTwo = ValueTwo.ToUpper(); //Todo: Implement the other three the same way as ValueOne
+			OnPropertyChanged("ValueTwo");
+			ValueThree = ValueThree.ToUpper();
+			OnPropertyChanged("ValueThree");
+			ValueFour = ValueFour.ToUpper();
+			OnPropertyChanged("ValueFour");
+
 			string attemptGameURL = $"{_baseURL}/Game/Attempt/{completeAttempt}";
 
 			StringContent queryString = new StringContent(completeAttempt);

@@ -151,9 +151,9 @@ namespace MasterMindDataAccess
 			List<string> tmpHints = new List<string>();
 			for(int i=0; i<4; i++)
 			{
-				if (attempt[i] == game[i])
+				if (attempt[i].ToUpper() == game[i])
 					tmpHints.Add(CHAR_IN_CORRECT_POSITION);
-				else if (game.Contains(attempt[i]))
+				else if (game.Contains(attempt[i].ToUpper()))
 					tmpHints.Add(CHAR_IN_WRONG_POSITION);
 			}
 

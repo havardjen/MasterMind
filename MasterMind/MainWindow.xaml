@@ -31,9 +31,10 @@
 			<TextBox Text="{Binding ValueFour}" />
 			<Button Content="Guess" 
 					Command="{Binding AttemptGameCommand}"
-					IsEnabled="{Binding CanGuessGame}"/>
+					IsEnabled="{Binding CanGuessGame}" />
 			<Button Content="New game"
-					Command="{Binding CreateGameCommand}" />
+					Command="{Binding CreateGameCommand}"
+					ToolTip="This will verify your attempt towards the solution, it also activates the Guess button."/>
 		</StackPanel>
 		<ScrollViewer DockPanel.Dock="Top"
 					  VerticalScrollBarVisibility="Auto">
