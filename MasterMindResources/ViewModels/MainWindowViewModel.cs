@@ -4,6 +4,7 @@ using MasterMindResources.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -18,7 +19,7 @@ namespace MasterMindResources.ViewModels
 			_client = new HttpClient();
 			_baseURL = "https://localhost:44351/api/MasterMind";
 			_gameId = -1;
-			Attempts = new List<Attempt>();
+			Attempts = new ObservableCollection<Attempt>();
 
 
 			GetValidCharacters();
@@ -53,7 +54,7 @@ namespace MasterMindResources.ViewModels
 		public string ValueFour { get; set; }
 
 		public bool CanGuessGame { get { return _gameId > 0; } }
-		public List<Attempt> Attempts { get; set; }
+		public ObservableCollection<Attempt> Attempts { get; set; }
 
 		public ICommand CreateGameCommand { get; set; }
 		public ICommand AttemptGameCommand { get; set; }
@@ -138,7 +139,6 @@ namespace MasterMindResources.ViewModels
 			};
 
 			Attempts.Add(newAttempt);
-			OnPropertyChanged("Attempts");
 		}
 	}
 }
