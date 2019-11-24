@@ -1,0 +1,9 @@
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\bin\Debug\MasterMindResources.dll
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\bin\Debug\MasterMindResources.pdb
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.csprojAssemblyReference.cache
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.dll
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.pdb
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\bin\Debug\System.Web.Mvc.dll
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.csproj.CopyComplete
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\bin\Debug\Newtonsoft.Json.dll
+C:\Users\havar\source\repos\MasterMind\MasterMindResources\bin\Debug\Newtonsoft.Json.xml
