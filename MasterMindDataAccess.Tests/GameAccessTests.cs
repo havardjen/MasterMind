@@ -84,7 +84,23 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "WWWW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
+
+			// Assert
+			Assert.Equal(expectedHints, hints);
+		}
+
+		[Fact]
+		public void GetHints_FourEqualCharsOneInCorrPos_ResultReturned()
+		{
+			// Arrange
+			List<string> game = new List<string> { "A", "B", "C", "D" };
+			List<string> attempt = new List<string> { "A", "A", "A", "A" };
+
+			string expectedHints = "B";
+
+			// Act
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -106,7 +122,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BBBB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -128,7 +144,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BBBB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -138,19 +154,13 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_ThreeCorrectOneMissing_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
-
-			List<string> attempt = new List<string>();
-			attempt.Add(game[0]);
-			attempt.Add(game[1]);
-			attempt.Add(game[2]);
-			attempt.Add("H");		// We use an invalid characters, to make sure that the 4th char in attempt is not a correct one in correct position.
+			List<string> game = new List<string> { "A", "B", "C", "D" };
+			List<string> attempt = new List<string> { "A", "B", "C", "E" };
 
 			string expectedHints = "BBB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -160,19 +170,13 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_2ndWrongPos3rd4thCorrect_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
-
-			List<string> attempt = new List<string>();
-			attempt.Add("H");		// We use an invalid characters, to make sure that the 4th char in attempt is not a correct one in correct position.
-			attempt.Add(game[0]);
-			attempt.Add(game[2]);
-			attempt.Add(game[3]);       
+			List<string> game = new List<string> { "A", "B", "C", "D" };
+			List<string> attempt = new List<string> { "F", "A", "C", "D" };
 
 			string expectedHints = "BBW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -182,41 +186,45 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_1st2ndCorrPos3rd4thMissing_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
-
-			List<string> attempt = new List<string>();
-			attempt.Add(game[0]);
-			attempt.Add(game[1]);
-			attempt.Add("O");       // We use an invalid characters, to make sure that the 4th char in attempt is not a correct one in correct position.
-			attempt.Add("P");
+			List<string> game = new List<string> { "A", "B", "C", "D" };
+			List<string> attempt = new List<string> { "A", "B", "F", "F" };
 
 			string expectedHints = "BB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
 		}
 
 		[Fact]
-		public void GetHints_1stWrong2ndCorr3rdWrong4thMissing_ResultReturned()
+		public void GetHints_1stWrongPos2ndCorr3rdWrongPos4thMissing_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
-
-			List<string> attempt = new List<string>();
-			attempt.Add("H");  // We use an invalid characters, to make sure that the 4th char in attempt is not a correct one in correct position.
-			attempt.Add(game[1]);
-			attempt.Add(game[0]);       
-			attempt.Add(game[2]);
+			List<string> game = new List<string> { "A", "B", "C", "D" };
+			List<string> attempt = new List<string> { "D", "B", "F", "C" };
 
 			string expectedHints = "BWW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
+
+			// Assert
+			Assert.Equal(expectedHints, hints);
+		}
+
+		[Fact]
+		public void GetHints_1stMissing2ndCorr3rdWrongPos4thMissing_ResultReturned()
+		{
+			// Arrange
+			List<string> game = new List<string> { "A", "B", "C", "D" };
+			List<string> attempt = new List<string> { "F", "B", "D", "E" };
+
+			string expectedHints = "BW";
+
+			// Act
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -226,19 +234,13 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_NoCorrectCharsReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
-
-			List<string> attempt = new List<string>();
-			attempt.Add("H");  // We use an invalid characters, to make sure that the 4th char in attempt is not a correct one in correct position.
-			attempt.Add("H");
-			attempt.Add("H");
-			attempt.Add("H");
+			List<string> game = new List<string> { "A", "B", "A", "A" };
+			List<string> attempt = new List<string> { "C", "D", "E", "F" };
 
 			string expectedHints = string.Empty;
 
 			// Act
-			string hints = _gameAccessor.GetHints(gameId, attempt);
+			string hints = _gameAccessor.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
