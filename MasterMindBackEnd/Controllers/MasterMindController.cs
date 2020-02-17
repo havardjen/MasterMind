@@ -52,7 +52,8 @@ namespace MasterMindBackEnd.Controllers
 			List<string> attempt = new List<string> { arString[1][0].ToString(), arString[1][1].ToString(), arString[1][2].ToString(), arString[1][3].ToString() };
 			_gameAccessor.RegisterAttempt(gameId, attempt);
 
-			return _gameAccessor.GetHints(gameId, attempt);
+			List<string> game = _gameAccessor.GetGame(gameId);
+			return _gameAccessor.GetHints(game, attempt);
 		}
 
 

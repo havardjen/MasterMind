@@ -15,12 +15,14 @@ namespace MasterMindDataAccess
 			_gameTypeAccessor = new GameTypeAccess();
 			_charAccessor = new CharactersAccess();
 
+			_validCharacters = _charAccessor.GetCharacter(string.Empty, true);
 			VerifyGameTypes();
 		}
 
 		string _connectionString;
 		IGameTypeAccess _gameTypeAccessor;
 		ICharactersAccess _charAccessor;
+		List<string> _validCharacters;
 
 		private const string GAME = "Game";
 		private const string ATTEMPT = "Attempt";
@@ -42,6 +44,16 @@ namespace MasterMindDataAccess
 
 			if (!(gameTypeId > 0))
 				_gameTypeAccessor.CreateGameType(ATTEMPT);
+		}
+
+		private bool IsValidChar(string charToTest)
+		{
+			bool isValid = false;
+
+			if (_validCharacters.Contains(charToTest))
+				isValid = true;
+
+			return isValid;
 		}
 
 		public int CreateGame()
@@ -144,17 +156,39 @@ namespace MasterMindDataAccess
 		/// <param name="gameId"></param>
 		/// <param name="attempt"></param>
 		/// <returns></returns>
-		public string GetHints(int gameId, List<string> attempt)
+		public string GetHints(List<string> game, List<string> attempt)
 		{
 			string result = string.Empty;
-			List<string> game = GetGame(gameId);
+			Dictionary<string, int> ValidCharsCount = new Dictionary<string, int> { { "A", 0 }, { "B", 0 }, { "C", 0 }, { "D", 0 }, { "E", 0 }, { "F", 0 } };
+
+			for (int i = 0; i < attempt.Count; i++)
+				attempt[i] = attempt[i].ToUpper();
+
 			List<string> tmpHints = new List<string>();
 			for(int i=0; i<4; i++)
 			{
-				if (attempt[i].ToUpper() == game[i])
+				if (attempt[i] == game[i])
+				{
 					tmpHints.Add(CHAR_IN_CORRECT_POSITION);
-				else if (game.Contains(attempt[i].ToUpper()))
-					tmpHints.Add(CHAR_IN_WRONG_POSITION);
+					ValidCharsCount[attempt[i]]++;
+				}
+					
+			}
+
+			for (int i = 0; i < 4; i++)
+			{
+				string attChar = attempt[i];
+				if ((attChar != game[i]))
+				{
+					int count = game.Where(x => x == attChar).Count();
+
+					if(IsValidChar(attChar) && ValidCharsCount[attChar] < count)
+					{
+						ValidCharsCount[attChar]++;
+						tmpHints.Add(CHAR_IN_WRONG_POSITION);
+					}
+				}
+					
 			}
 
 			tmpHints.Sort();
