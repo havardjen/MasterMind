@@ -2,3 +2,6 @@
 # Both the directory itself and its contents will be ignored.
 bin/
 packages/
+**/obj/Debug/
+**/*.*/obj/Debug/
+.vs/
