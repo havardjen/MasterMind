@@ -196,6 +196,6 @@ namespace MasterMindDataAccess
 				result += h;
 
 			return result;
-		}
+		} 
 	}
 }
