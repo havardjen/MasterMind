@@ -26,6 +26,15 @@ namespace MasterMindResources.ViewModels
 			CreateGameCommand = new GeneralNoParameterCommand(CreateGame);
 			AttemptGameCommand = new GeneralNoParameterCommand(() =>
 			{
+				ValueOne = string.IsNullOrWhiteSpace(ValueOne) ? "A" : ValueOne.ToUpper();
+				ValueTwo = string.IsNullOrWhiteSpace(ValueTwo) ? "A" : ValueTwo.ToUpper();
+				ValueThree = string.IsNullOrWhiteSpace(ValueThree) ? "A" : ValueThree.ToUpper();
+				ValueFour = string.IsNullOrWhiteSpace(ValueFour) ? "A" : ValueFour.ToUpper();
+				OnPropertyChanged("ValueOne");
+				OnPropertyChanged("ValueTwo");
+				OnPropertyChanged("ValueThree");
+				OnPropertyChanged("ValueFour");
+
 				string completeAttempt = $"{_gameId}_{ValueOne}{ValueTwo}{ValueThree}{ValueFour}";
 				AttemptGame(completeAttempt);
 			});
@@ -110,14 +119,6 @@ namespace MasterMindResources.ViewModels
 
 		public async void AttemptGame(string completeAttempt)
 		{
-			ValueOne = ValueOne.ToUpper();
-			ValueTwo = ValueTwo.ToUpper(); //Todo: Implement the other three the same way as ValueOne
-			OnPropertyChanged("ValueTwo");
-			ValueThree = ValueThree.ToUpper();
-			OnPropertyChanged("ValueThree");
-			ValueFour = ValueFour.ToUpper();
-			OnPropertyChanged("ValueFour");
-
 			string attemptGameURL = $"{_baseURL}/Game/Attempt/{completeAttempt}";
 
 			StringContent queryString = new StringContent(completeAttempt);
