@@ -5,7 +5,6 @@ using System.Web.Http;
 
 namespace MasterMindBackEnd.Controllers
 {
-
 	[RoutePrefix("api/MasterMind")]
 	public class MasterMindController : ApiController
 	{

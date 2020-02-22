@@ -4,4 +4,4 @@ bin/
 packages/
 **/obj/Debug/
 **/*.*/obj/Debug/
-.vs/
+**/.vs
