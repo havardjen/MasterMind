@@ -26,10 +26,10 @@ namespace MasterMindResources.ViewModels
 			CreateGameCommand = new GeneralNoParameterCommand(CreateGame);
 			AttemptGameCommand = new GeneralNoParameterCommand(() =>
 			{
-				ValueOne = string.IsNullOrWhiteSpace(ValueOne) ? "A" : ValueOne.ToUpper();
-				ValueTwo = string.IsNullOrWhiteSpace(ValueTwo) ? "A" : ValueTwo.ToUpper();
-				ValueThree = string.IsNullOrWhiteSpace(ValueThree) ? "A" : ValueThree.ToUpper();
-				ValueFour = string.IsNullOrWhiteSpace(ValueFour) ? "A" : ValueFour.ToUpper();
+				ValueOne = string.IsNullOrWhiteSpace(ValueOne)		? "Q" : ValueOne.ToUpper();
+				ValueTwo = string.IsNullOrWhiteSpace(ValueTwo)		? "Q" : ValueTwo.ToUpper();
+				ValueThree = string.IsNullOrWhiteSpace(ValueThree)	? "Q" : ValueThree.ToUpper();
+				ValueFour = string.IsNullOrWhiteSpace(ValueFour)	? "Q" : ValueFour.ToUpper();
 				OnPropertyChanged("ValueOne");
 				OnPropertyChanged("ValueTwo");
 				OnPropertyChanged("ValueThree");
@@ -47,7 +47,7 @@ namespace MasterMindResources.ViewModels
 		private string _hints;
 		private string _valueOne;
 
-		#region Properties
+#region Properties
 
 		public string ValueOne 
 		  { 
@@ -68,7 +68,7 @@ namespace MasterMindResources.ViewModels
 		public ICommand CreateGameCommand { get; set; }
 		public ICommand AttemptGameCommand { get; set; }
 
-		#endregion
+#endregion
 
 
 		public async void GetValidCharacters()
@@ -114,7 +114,7 @@ namespace MasterMindResources.ViewModels
 			if (response.IsSuccessStatusCode)
 				_gameId = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
 
-			OnPropertyChanged("CanGuessGame");
+			OnPropertyChanged(nameof(CanGuessGame));
 		}
 
 		public async void AttemptGame(string completeAttempt)
@@ -126,9 +126,7 @@ namespace MasterMindResources.ViewModels
 
 			_hints = string.Empty;
 			if (response.IsSuccessStatusCode)
-			{
 				_hints = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
-			}
 
 			Attempt newAttempt = new Attempt
 			{

@@ -8,7 +8,8 @@ namespace MasterMindDataAccess.Tests
     {
 		public GameTypeAccessTests()
 		{
-			_gameTypeAccessor = new GameTypeAccess();
+            string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
+			_gameTypeAccessor = new GameTypeAccess(connectionString);
 		}
 
 		IGameTypeAccess _gameTypeAccessor;

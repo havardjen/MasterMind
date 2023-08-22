@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindDataAccess", "Mas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindDataAccess.Tests", "MasterMindDataAccess.Tests\MasterMindDataAccess.Tests.csproj", "{B2B76641-0555-4EA3-ADDC-E8DC369E60DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindService", "MasterMindService\MasterMindService.csproj", "{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B2B76641-0555-4EA3-ADDC-E8DC369E60DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2B76641-0555-4EA3-ADDC-E8DC369E60DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2B76641-0555-4EA3-ADDC-E8DC369E60DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

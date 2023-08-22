@@ -6,18 +6,18 @@ namespace MasterMindDataAccess
 {
 	public class GameTypeAccess : IGameTypeAccess
 	{
-		public GameTypeAccess()
-		{
-			connectionString = @"Data Source=C:\Users\havar\source\repos\MasterMind\MasterMindDB.db";
-		}
+		public GameTypeAccess(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
 
-		string connectionString;
+		string _connectionString;
 
 		public int CreateGameType(string gameType)
 		{
 			int gameTypeId = 0;
 
-			using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
 				string queryText = @$"INSERT INTO GameType(gameType)
 									  VALUES('{gameType}'); ";
@@ -46,7 +46,7 @@ namespace MasterMindDataAccess
 		{
 			string gameType = string.Empty;
 
-			using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
 				string queryText = @$"SELECT t.GameType
 									  FROM GameType t
@@ -69,7 +69,7 @@ namespace MasterMindDataAccess
 		{
 			int gameTypeId = 0;
 
-			using(SQLiteConnection conn = new SQLiteConnection(connectionString))
+			using(SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
 				string queryText = @$"SELECT t.GameTypeId
 									  FROM GameType t

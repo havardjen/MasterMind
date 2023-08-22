@@ -9,7 +9,8 @@ namespace MasterMindDataAccess.Tests
 	{
 		public GameAccessTests()
 		{
-			_gameAccessor = new GameAccess();
+			string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
+			_gameAccessor = new GameAccess(connectionString);
 		}
 
 		IGameAccess _gameAccessor;

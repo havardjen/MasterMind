@@ -1,5 +1,6 @@
 ﻿using MasterMindDataAccess;
 using MasterMindResources.Interfaces;
+using MasterMindService;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -8,15 +9,16 @@ namespace MasterMindBackEnd.Controllers
 	[RoutePrefix("api/MasterMind")]
 	public class MasterMindController : ApiController
 	{
-		public MasterMindController()
-		{
-			_gameTypeAccessor = new GameTypeAccess();
-			_gameAccessor = new GameAccess();
-			_charactersAccess = new CharactersAccess();
+		public MasterMindController(ICharactersService charService, string connectionString)
+        {
+			_gameTypeAccessor = new GameTypeAccess(connectionString);
+			_gameAccessor = new GameAccess(connectionString);
+			_charactersService = charService;
 		}
+
 		private IGameTypeAccess _gameTypeAccessor;
 		private IGameAccess _gameAccessor;
-		private ICharactersAccess _charactersAccess;
+		private ICharactersService _charactersService;
 
 		[HttpGet, Route("")]
 		public string Get()
@@ -27,7 +29,7 @@ namespace MasterMindBackEnd.Controllers
 		[HttpGet, Route("ValidCharacters")]
 		public List<string> GetValidCharacters()
 		{
-			return _charactersAccess.GetCharacter(string.Empty, true);
+			return _charactersService.GetCharacter(string.Empty, true);
 		}
 
 

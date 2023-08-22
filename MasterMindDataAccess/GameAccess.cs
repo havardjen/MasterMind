@@ -9,19 +9,19 @@ namespace MasterMindDataAccess
 {
 	public class GameAccess : IGameAccess
 	{
-		public GameAccess()
+		public GameAccess(string connectionString)
 		{
-			_connectionString = @"Data Source=C:\Users\havar\source\repos\MasterMind\MasterMindDB.db";
-			_gameTypeAccessor = new GameTypeAccess();
-			_charAccessor = new CharactersAccess();
+            _connectionString = connectionString;
+			_gameTypeAccessor = new GameTypeAccess(_connectionString);
+			_charRepository = new CharactersRepository(_connectionString);
 
-			_validCharacters = _charAccessor.GetCharacter(string.Empty, true);
+			_validCharacters = _charRepository.GetCharacter(string.Empty, true);
 			VerifyGameTypes();
 		}
 
 		string _connectionString;
 		IGameTypeAccess _gameTypeAccessor;
-		ICharactersAccess _charAccessor;
+		ICharactersRepository _charRepository;
 		List<string> _validCharacters;
 
 		private const string GAME = "Game";
@@ -61,7 +61,7 @@ namespace MasterMindDataAccess
 			int gameId = 0;
 			int gametypeId = _gameTypeAccessor.GetGameTypeIdByGameType(GAME);
 
-			List<string> allCharsInDb = _charAccessor.GetCharacter("w", true);
+			List<string> allCharsInDb = _charRepository.GetCharacter("w", true);
 			List<string> newGame = allCharsInDb.OrderBy(x => Guid.NewGuid()).Take(4).ToList();  // Sorting the list in a random order using Guid.
 																								// Then the first four items are picked.
 
@@ -115,7 +115,7 @@ namespace MasterMindDataAccess
 			bool result = false;
 			int attemptTypeId = _gameTypeAccessor.GetGameTypeIdByGameType(ATTEMPT);
 
-			if (_charAccessor.VerifyCharactersInGame(attempt))
+			if (_charRepository.VerifyCharactersInGame(attempt))
 			{
 				using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 				{
