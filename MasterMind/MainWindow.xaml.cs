@@ -1,4 +1,5 @@
 ﻿using MasterMindResources.ViewModels;
+using System.Net.Http;
 using System.Windows;
 
 namespace MasterMind
@@ -12,7 +13,10 @@ namespace MasterMind
 		{
 			InitializeComponent();
 
-			_vm = new MainWindowViewModel();
+			var baseUrl = "https://localhost:44351/api/MasterMind";
+			var client = new HttpClient();
+
+            _vm = new MainWindowViewModel(client, baseUrl);
 			DataContext = _vm;
 		}
 

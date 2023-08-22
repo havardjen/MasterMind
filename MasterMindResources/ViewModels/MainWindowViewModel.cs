@@ -6,21 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Windows.Input;
 
 namespace MasterMindResources.ViewModels
 {
 	public class MainWindowViewModel : Notifier
 	{
-		public MainWindowViewModel()
+		public MainWindowViewModel(HttpClient client, string baseUrl)
 		{
-			_client = new HttpClient();
-			_baseURL = "https://localhost:44351/api/MasterMind";
+			_client = client;
+			_baseURL = baseUrl;
 			_gameId = -1;
 			Attempts = new ObservableCollection<Attempt>();
-
 
 			GetValidCharacters();
 			CreateGameCommand = new GeneralNoParameterCommand(CreateGame);
