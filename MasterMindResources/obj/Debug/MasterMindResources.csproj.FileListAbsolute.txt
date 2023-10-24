@@ -16,3 +16,12 @@ D:\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResourc
 D:\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.csproj.CopyComplete
 D:\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.dll
 D:\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.pdb
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\bin\Debug\MasterMindResources.dll
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\bin\Debug\MasterMindResources.pdb
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\bin\Debug\Newtonsoft.Json.dll
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\bin\Debug\Newtonsoft.Json.xml
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.csproj.AssemblyReference.cache
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.csproj.CoreCompileInputs.cache
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.csproj.CopyComplete
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.dll
+C:\Users\29998havjen\OneDrive\Utvikling\MasterMind\MasterMindResources\obj\Debug\MasterMindResources.pdb

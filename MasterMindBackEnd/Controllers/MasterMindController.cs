@@ -1,6 +1,5 @@
 ﻿using MasterMindDataAccess;
 using MasterMindResources.Interfaces;
-using MasterMindService;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -56,7 +55,6 @@ namespace MasterMindBackEnd.Controllers
 			List<string> game = _gameAccessor.GetGame(gameId);
 			return _gameAccessor.GetHints(game, attempt);
 		}
-
 
 		[HttpGet, Route("GameType/{id}")]
 		public string GetGameType(int id)
