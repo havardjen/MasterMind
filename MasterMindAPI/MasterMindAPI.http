@@ -1,0 +1,6 @@
+@MasterMindAPI_HostAddress = http://localhost:5282
+
+GET {{MasterMindAPI_HostAddress}}/mastermindapi/
+Accept: application/json
+
+###

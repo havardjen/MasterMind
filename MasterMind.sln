@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29418.71
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36221.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMind", "MasterMind\MasterMind.csproj", "{80C474F6-50EB-4C3A-940B-23D65BE1D176}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindDataAccess.Tests", "MasterMindDataAccess.Tests\MasterMindDataAccess.Tests.csproj", "{B2B76641-0555-4EA3-ADDC-E8DC369E60DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindService", "MasterMindService\MasterMindService.csproj", "{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindAPI", "MasterMindAPI\MasterMindAPI.csproj", "{AB711D0C-1E60-4210-8C0C-F65B5F76C406}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8067AAA-A1BE-4C23-BFE1-86153E5D13D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
