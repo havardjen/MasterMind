@@ -10,13 +10,14 @@ namespace MasterMindBackEnd.Controllers
 	{
 		public MasterMindController(ICharactersService charService, string connectionString)
         {
-			_gameTypeAccessor = new GameTypeAccess(connectionString);
-			_gameAccessor = new GameAccess(connectionString);
-			_charactersService = charService;
+            _charactersService = charService;
+            _gameTypeAccessor = new GameTypeAccess(connectionString);
+			_gameAccessor = new GameRepository(connectionString, _gameTypeAccessor, _charactersService.CharacterRepository);
+			
 		}
 
 		private IGameTypeAccess _gameTypeAccessor;
-		private IGameAccess _gameAccessor;
+		private IGameRepository _gameAccessor;
 		private ICharactersService _charactersService;
 
 		[HttpGet, Route("")]

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MasterMindResources.Interfaces
 {
-	public interface IGameAccess
+	public interface IGameRepository
 	{
 		int CreateGame();
 		List<string> GetGame(int gameId);

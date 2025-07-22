@@ -1,5 +1,4 @@
 ﻿using MasterMindResources.Interfaces;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -9,19 +8,24 @@ namespace MasterMindDataAccess.Tests
 	{
 		public GameAccessTests()
 		{
-			string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
-			_gameAccessor = new GameAccess(connectionString);
+            //string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
+            string connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db";
+
+            var gameTypeAccessor = new GameTypeAccess(connectionString);
+			_characterRepository = new CharactersRepository(connectionString);
+            _gameRepository = new GameRepository(connectionString, gameTypeAccessor, _characterRepository);
 		}
 
-		IGameAccess _gameAccessor;
+		IGameRepository _gameRepository;
+		ICharactersRepository _characterRepository;
 
-		[Fact]
+        [Fact]
 		public void CreateGame_ValidCharacters_GameCreatedGameIdReturned()
 		{
 			// Arrange
 
 			// Act
-			int gameId = _gameAccessor.CreateGame();
+			int gameId = _gameRepository.CreateGame();
 
 			// Assert
 			Assert.True(gameId > 0);
@@ -34,7 +38,7 @@ namespace MasterMindDataAccess.Tests
 			int gameId = 3;  // shortcut, for now we'll have to trust this gameId exists in the database.
 
 			// Act
-			List<string> Game = _gameAccessor.GetGame(gameId);
+			List<string> Game = _gameRepository.GetGame(gameId);
 
 			// Assert
 			Assert.NotNull(Game);
@@ -45,11 +49,11 @@ namespace MasterMindDataAccess.Tests
 		public void RegisterAttempt_ValidCharacters_AttemptRegisteredTrueReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
+			int gameId = _gameRepository.CreateGame();
 			List<string> attempt = new List<string> { "A", "B", "C", "D" };
 
 			// Act
-			bool attemptRegistered = _gameAccessor.RegisterAttempt(gameId, attempt);
+			bool attemptRegistered = _gameRepository.RegisterAttempt(gameId, attempt);
 
 			// Assert
 			Assert.True(attemptRegistered);
@@ -63,7 +67,7 @@ namespace MasterMindDataAccess.Tests
 			List<string> attempt = new List<string> { "A", "B", "C", "D" };
 
 			// Act
-			bool attemptRegistered = _gameAccessor.RegisterAttempt(gameId, attempt);
+			bool attemptRegistered = _gameRepository.RegisterAttempt(gameId, attempt);
 
 			// Assert
 			Assert.True(attemptRegistered);
@@ -73,8 +77,8 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_NoCharsInCorrPos_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
+			int gameId = _gameRepository.CreateGame();
+			List<string> game = _gameRepository.GetGame(gameId);
 			
 			List<string> attempt = new List<string>();
 			attempt.Add(game[3]);
@@ -85,7 +89,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "WWWW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -101,7 +105,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "B";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -111,8 +115,8 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_AllCharsInCorrectPosition_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
+			int gameId = _gameRepository.CreateGame();
+			List<string> game = _gameRepository.GetGame(gameId);
 
 			List<string> attempt = new List<string>();
 			attempt.Add(game[0]);
@@ -123,7 +127,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BBBB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -133,8 +137,8 @@ namespace MasterMindDataAccess.Tests
 		public void GetHints_AllCharsCorrPossLowerCase_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameAccessor.CreateGame();
-			List<string> game = _gameAccessor.GetGame(gameId);
+			int gameId = _gameRepository.CreateGame();
+			List<string> game = _gameRepository.GetGame(gameId);
 
 			List<string> attempt = new List<string>();
 			attempt.Add(game[0].ToLower());
@@ -145,7 +149,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BBBB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -161,7 +165,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BBB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -177,7 +181,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BBW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -193,7 +197,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BB";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -209,7 +213,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BWW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -225,7 +229,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = "BW";
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);
@@ -241,7 +245,7 @@ namespace MasterMindDataAccess.Tests
 			string expectedHints = string.Empty;
 
 			// Act
-			string hints = _gameAccessor.GetHints(game, attempt);
+			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
 			Assert.Equal(expectedHints, hints);

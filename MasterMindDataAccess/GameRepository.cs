@@ -7,13 +7,13 @@ using System.Linq;
 
 namespace MasterMindDataAccess
 {
-	public class GameAccess : IGameAccess
+	public class GameRepository : IGameRepository
 	{
-		public GameAccess(string connectionString)
+		public GameRepository(string connectionString, IGameTypeAccess gameTypeAccess, ICharactersRepository charRepository)
 		{
             _connectionString = connectionString;
-			_gameTypeAccessor = new GameTypeAccess(_connectionString);
-			_charRepository = new CharactersRepository(_connectionString);
+			_gameTypeAccessor = gameTypeAccess;
+			_charRepository = charRepository;
 
 			_validCharacters = _charRepository.GetCharacter(string.Empty, true);
 			VerifyGameTypes();
