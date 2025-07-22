@@ -16,6 +16,8 @@ namespace MasterMindService
 
         ICharactersRepository _characterRepository;
 
+        public ICharactersRepository CharacterRepository => _characterRepository;
+
         public List<string> GetCharacter(string charToGet, bool getAll = false)
         {
             return _characterRepository.GetCharacter(charToGet, getAll);

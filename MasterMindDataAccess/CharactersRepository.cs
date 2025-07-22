@@ -26,7 +26,7 @@ namespace MasterMindDataAccess
 			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
 				string queryText = @"SELECT Character
-									 FROM ValidCharacters;
+									 FROM ValidCharacters
 									 ORDER BY Character ASC";
 
 				SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
