@@ -13,7 +13,8 @@ namespace MasterMindBackEnd
             var container = new UnityContainer();
             container.RegisterType<ICharactersService, CharactersService>();
             container.RegisterType<ICharactersRepository, CharactersRepository>();
-            container.RegisterInstance<string>(@"Data Source=D:\OneDrive\Utvikling\MasterMind\MasterMindDB.db");
+            //container.RegisterInstance<string>(@"Data Source=D:\OneDrive\Utvikling\MasterMind\MasterMindDB.db");
+            container.RegisterInstance<string>(@"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db");
             config.DependencyResolver = new UnityResolver(container);
 
             // Web API configuration and services
