@@ -9,8 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MasterMindDataAccess\MasterMindDataAccess.csproj" />
+    <ProjectReference Include="..\MasterMindResources\MasterMindResources.csproj" />
+    <ProjectReference Include="..\MasterMindService\MasterMindService.csproj" />
   </ItemGroup>
 
 </Project>
