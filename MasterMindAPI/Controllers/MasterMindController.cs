@@ -1,6 +1,4 @@
 ﻿using MasterMindResources.Interfaces;
-using MasterMindService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MasterMindAPI.Controllers
