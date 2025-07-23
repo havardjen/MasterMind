@@ -1,4 +1,4 @@
-﻿using MasterMindDataAccess;
+﻿//using MasterMindDataAccess;
 using MasterMindResources.Interfaces;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -11,8 +11,8 @@ namespace MasterMindBackEnd.Controllers
 		public MasterMindController(ICharactersService charService, string connectionString)
         {
             _charactersService = charService;
-            _gameTypeAccessor = new GameTypeAccess(connectionString);
-			_gameAccessor = new GameRepository(connectionString, _gameTypeAccessor, _charactersService.CharacterRepository);
+   //         _gameTypeAccessor = new GameTypeAccess(connectionString);
+			//_gameAccessor = new GameRepository(connectionString, _gameTypeAccessor, _charactersService.CharacterRepository);
 			
 		}
 

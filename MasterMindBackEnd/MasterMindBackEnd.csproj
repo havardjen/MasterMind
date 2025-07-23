@@ -23,6 +23,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <_MigrateToProjectGuid>b5c8f79e-6e4c-4830-6f84-e09b7f1b78e2</_MigrateToProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -200,17 +201,9 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MasterMindDataAccess\MasterMindDataAccess.csproj">
-      <Project>{8c395e56-b50e-4ac2-9267-59f0c21e3c76}</Project>
-      <Name>MasterMindDataAccess</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MasterMindResources\MasterMindResources.csproj">
       <Project>{732ff664-5447-49f5-9157-e519102c784c}</Project>
       <Name>MasterMindResources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MasterMindService\MasterMindService.csproj">
-      <Project>{a8067aaa-a1be-4c23-bfe1-86153e5d13d8}</Project>
-      <Name>MasterMindService</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
