@@ -1,4 +1,5 @@
 ﻿using MasterMindResources.Interfaces;
+using MasterMindResources.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MasterMindAPI.Controllers
@@ -38,6 +39,12 @@ namespace MasterMindAPI.Controllers
         public ActionResult<int> CreateGame()
         {
             return Ok(_gameRepository.CreateGame());
+        }
+
+        [HttpGet, Route("Game/{gameId}")]
+        public ActionResult<Game> GetGame(int gameId)
+        {
+            return Ok(_gameRepository.GetGame(gameId));
         }
     }
 }

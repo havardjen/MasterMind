@@ -1,7 +1,9 @@
 ﻿using MasterMindResources.Interfaces;
+using MasterMindResources.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 
 
@@ -85,28 +87,30 @@ namespace MasterMindDataAccess
 			return gameId;
 		}
 
-		public List<string> GetGame(int gameId)
+		public Game GetGame(int gameId)
 		{
-			List<string> game = new List<string>();
-			string tmpGame = string.Empty;
-
-			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+            var game = new Game();
+            using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
-				string queryText = @$"SELECT g.Value1 || g.Value2 || g.Value3 || g.Value4 as GameFetched
+				string queryText = @$"SELECT g.GameId, g.CreatedDate, g.ModifiedDate
 									 FROM Game g
 									 WHERE g.GameId = {gameId};";
 
 				SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+				
 				conn.Open();
-				tmpGame = cmd.ExecuteScalar().ToString();
-				conn.Close();
+				using (var reader = cmd.ExecuteReader())
+				{
+                    if (reader.Read())
+                    {
+                        game.GameId = Convert.ToInt32(reader["GameId"]);
+                        game.CreatedDate = DateTime.Parse(reader["CreatedDate"].ToString());
+                        game.ModifiedDate = DateTime.Parse(reader["ModifiedDate"].ToString());
+                    }
+                }	
+                conn.Close();
 			}
-
-			game.Add(tmpGame.ElementAt(0).ToString());
-			game.Add(tmpGame.ElementAt(1).ToString());
-			game.Add(tmpGame.ElementAt(2).ToString());
-			game.Add(tmpGame.ElementAt(3).ToString());
-
+			
 			return game;
 		}
 
