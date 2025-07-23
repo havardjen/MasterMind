@@ -69,10 +69,13 @@ namespace MasterMindDataAccess
 
 			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
-				string queryText = $@"INSERT INTO Game(GameTypeId, Value1, Value2, Value3, Value4)
-									  VALUES('{gametypeId}', '{newGame[0]}', '{newGame[1]}', '{newGame[2]}', '{newGame[3]}');";
+                //string queryText = $@"INSERT INTO Game(GameTypeId, Value1, Value2, Value3, Value4)
+                //					  VALUES('{gametypeId}', '{newGame[0]}', '{newGame[1]}', '{newGame[2]}', '{newGame[3]}');";
 
-				SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+                string queryText = $@"INSERT INTO Game(CreatedDate)
+                					  VALUES(datetime('now'));";
+
+                SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
 
 				conn.Open();
 				
