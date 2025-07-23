@@ -2,7 +2,7 @@
 
 namespace MasterMindResources.Interfaces
 {
-	public interface IGameTypeAccess
+	public interface IGameTypeRepository
 	{
 		int CreateGameType(string gameType);
 		int GetGameTypeIdByGameType(string gameType);

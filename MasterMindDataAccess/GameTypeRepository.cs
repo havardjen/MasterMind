@@ -4,9 +4,9 @@ using System.Data.SQLite;
 
 namespace MasterMindDataAccess
 {
-	public class GameTypeAccess : IGameTypeAccess
+	public class GameTypeRepository : IGameTypeRepository
 	{
-		public GameTypeAccess(string connectionString)
+		public GameTypeRepository(string connectionString)
         {
             _connectionString = connectionString;
         }

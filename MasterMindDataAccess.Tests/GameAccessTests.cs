@@ -11,7 +11,7 @@ namespace MasterMindDataAccess.Tests
             //string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
             string connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db";
 
-            var gameTypeAccessor = new GameTypeAccess(connectionString);
+            var gameTypeAccessor = new GameTypeRepository(connectionString);
 			_characterRepository = new CharactersRepository(connectionString);
             _gameRepository = new GameRepository(connectionString, gameTypeAccessor, _characterRepository);
 		}

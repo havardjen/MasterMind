@@ -10,10 +10,10 @@ namespace MasterMindDataAccess.Tests
 		{
             //var connectionString = @"D:\OneDrive\Utvikling\MasterMind";
             var connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db";
-            _gameTypeAccessor = new GameTypeAccess(connectionString);
+            _gameTypeAccessor = new GameTypeRepository(connectionString);
 		}
 
-		IGameTypeAccess _gameTypeAccessor;
+		IGameTypeRepository _gameTypeAccessor;
 
 		[Fact]
 		public void CreateGameType_GameTypeDoesNotExist_GameTypeIdReturned()

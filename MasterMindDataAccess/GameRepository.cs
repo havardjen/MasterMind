@@ -9,7 +9,7 @@ namespace MasterMindDataAccess
 {
 	public class GameRepository : IGameRepository
 	{
-		public GameRepository(string connectionString, IGameTypeAccess gameTypeAccess, ICharactersRepository charRepository)
+		public GameRepository(string connectionString, IGameTypeRepository gameTypeAccess, ICharactersRepository charRepository)
 		{
             _connectionString = connectionString;
 			_gameTypeAccessor = gameTypeAccess;
@@ -20,7 +20,7 @@ namespace MasterMindDataAccess
 		}
 
 		string _connectionString;
-		IGameTypeAccess _gameTypeAccessor;
+		IGameTypeRepository _gameTypeAccessor;
 		ICharactersRepository _charRepository;
 		List<string> _validCharacters;
 

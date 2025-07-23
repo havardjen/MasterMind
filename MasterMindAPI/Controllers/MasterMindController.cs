@@ -7,12 +7,14 @@ namespace MasterMindAPI.Controllers
     [ApiController]
     public class MasterMindController : ControllerBase
     {
-        public MasterMindController(ICharactersService charService)
+        public MasterMindController(ICharactersService charService, IGameRepository gameRepository)
         {
             _charactersService = charService;
+            _gameRepository = gameRepository;
         }
 
         private readonly ICharactersService _charactersService;
+        private readonly IGameRepository _gameRepository;
 
         [HttpGet]
         public ActionResult<string> Get()
@@ -30,6 +32,12 @@ namespace MasterMindAPI.Controllers
                 return NotFound("No valid characters found.");
             }
             return Ok(validCharacters);
+        }
+
+        [HttpGet, Route("Game/Create")]
+        public ActionResult<int> CreateGame()
+        {
+            return Ok(_gameRepository.CreateGame());
         }
     }
 }
