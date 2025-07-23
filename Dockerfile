@@ -14,6 +14,8 @@ COPY . .
 # Kopier utviklersertifikat inn i containeren
 COPY devCertificate.pfx .
 
+COPY MasterMindDB.db .
+
 
 WORKDIR /src/MasterMindAPI
 RUN dotnet restore "./MasterMindAPI.csproj"
@@ -26,6 +28,8 @@ RUN dotnet publish "./MasterMindAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+COPY MasterMindDB.db .
 
 # Kopier utviklersertifikat inn i den endelige containeren
 COPY devCertificate.pfx .
