@@ -1,12 +1,13 @@
 ﻿using MasterMindResources.Interfaces;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
 namespace MasterMindDataAccess.Tests
 {
-	public class GameAccessTests
+	public class GameReposityTests
 	{
-		public GameAccessTests()
+		public GameReposityTests()
 		{
             //string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
             string connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db";
@@ -22,27 +23,31 @@ namespace MasterMindDataAccess.Tests
         [Fact]
 		public void CreateGame_ValidCharacters_GameCreatedGameIdReturned()
 		{
-			// Arrange
+            // Arrange
 
-			// Act
-			int gameId = _gameRepository.CreateGame();
+            //TODO: Ensure that the first line in Attemps is marked as the solution. Preferably this line has a certain typeId(e.g. 1) to indicate it is the solution.
+
+            // Act
+            int gameId = _gameRepository.CreateGame();
 
 			// Assert
-			Assert.True(gameId > 0);
+			Assert.True(false);
 		}
 
 		[Fact]
 		public void GetGame_GameIdExists_GameReturned()
 		{
 			// Arrange
-			int gameId = 3;  // shortcut, for now we'll have to trust this gameId exists in the database.
+			int gameId = 163;  // shortcut, for now we'll have to trust this gameId exists in the database.
 
 			// Act
-			List<string> Game = _gameRepository.GetGame(gameId);
+			var Game = _gameRepository.GetGame(gameId);
 
 			// Assert
 			Assert.NotNull(Game);
-			Assert.Equal(4, Game.Count);
+			Assert.Equal(gameId, Game.GameId);
+			Assert.True(Game.CreatedDate > DateTime.MinValue);
+			Assert.True(Game.ModifiedDate > DateTime.MinValue);
 		}
 
 		[Fact]
@@ -56,50 +61,40 @@ namespace MasterMindDataAccess.Tests
 			bool attemptRegistered = _gameRepository.RegisterAttempt(gameId, attempt);
 
 			// Assert
-			Assert.True(attemptRegistered);
-		}
+			Assert.True(false);  // This is a placeholder assertion. Ensure that the attempt is registered successfully, with correct attemptId. There must be only one attempt with attemptId = 1, which is the solution.
+        }
 
-		[Fact]
-		public void RegisterAttempt_FromGuiAttempt_AttemptRegisteredTrueReturned()
-		{
-			// Arrange
-			int gameId = 41;
-			List<string> attempt = new List<string> { "A", "B", "C", "D" };
-
-			// Act
-			bool attemptRegistered = _gameRepository.RegisterAttempt(gameId, attempt);
-
-			// Assert
-			Assert.True(attemptRegistered);
-		}
 
 		[Fact]
 		public void GetHints_NoCharsInCorrPos_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameRepository.CreateGame();
-			List<string> game = _gameRepository.GetGame(gameId);
+			//int gameId = _gameRepository.CreateGame();
+			//List<string> game = _gameRepository.GetGame(gameId);
 			
-			List<string> attempt = new List<string>();
-			attempt.Add(game[3]);
-			attempt.Add(game[2]);
-			attempt.Add(game[1]);
-			attempt.Add(game[0]);
+			//List<string> attempt = new List<string>();
+			//attempt.Add(game[3]);
+			//attempt.Add(game[2]);
+			//attempt.Add(game[1]);
+			//attempt.Add(game[0]);
 
 			string expectedHints = "WWWW";
 
 			// Act
-			string hints = _gameRepository.GetHints(game, attempt);
+			//string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
+			Assert.Equal("A", "B");  // This is a placeholder assertion, replace with actual hints retrieval logic.
+        }
 
 		[Fact]
 		public void GetHints_FourEqualCharsOneInCorrPos_ResultReturned()
 		{
-			// Arrange
-			List<string> game = new List<string> { "A", "B", "C", "D" };
+            // Arrange
+
+            //TODO: GetHints() needs to check against the first line in Attempts, which is the solution. Preferably this line has a certain typeId(e.g. 1) to indicate it is the solution.
+
+            List<string> game = new List<string> { "A", "B", "C", "D" };
 			List<string> attempt = new List<string> { "A", "A", "A", "A" };
 
 			string expectedHints = "B";
@@ -108,7 +103,7 @@ namespace MasterMindDataAccess.Tests
 			string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
-			Assert.Equal(expectedHints, hints);
+			Assert.Equal("A", "B");
 		}
 
 		[Fact]
@@ -116,44 +111,44 @@ namespace MasterMindDataAccess.Tests
 		{
 			// Arrange
 			int gameId = _gameRepository.CreateGame();
-			List<string> game = _gameRepository.GetGame(gameId);
+			//List<string> game = _gameRepository.GetGame(gameId);
 
-			List<string> attempt = new List<string>();
-			attempt.Add(game[0]);
-			attempt.Add(game[1]);
-			attempt.Add(game[2]);
-			attempt.Add(game[3]);
+			//List<string> attempt = new List<string>();
+			//attempt.Add(game[0]);
+			//attempt.Add(game[1]);
+			//attempt.Add(game[2]);
+			//attempt.Add(game[3]);
 
 			string expectedHints = "BBBB";
 
 			// Act
-			string hints = _gameRepository.GetHints(game, attempt);
+			//string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
+			Assert.Equal("A", "B"); // This is a placeholder assertion, replace with actual hints retrieval logic.
+        }
 
 		[Fact]
 		public void GetHints_AllCharsCorrPossLowerCase_ResultReturned()
 		{
 			// Arrange
-			int gameId = _gameRepository.CreateGame();
-			List<string> game = _gameRepository.GetGame(gameId);
+			//int gameId = _gameRepository.CreateGame();
+			//List<string> game = _gameRepository.GetGame(gameId);
 
-			List<string> attempt = new List<string>();
-			attempt.Add(game[0].ToLower());
-			attempt.Add(game[1].ToLower());
-			attempt.Add(game[2].ToLower());
-			attempt.Add(game[3].ToLower());
+			//List<string> attempt = new List<string>();
+			//attempt.Add(game[0].ToLower());
+			//attempt.Add(game[1].ToLower());
+			//attempt.Add(game[2].ToLower());
+			//attempt.Add(game[3].ToLower());
 
 			string expectedHints = "BBBB";
 
 			// Act
-			string hints = _gameRepository.GetHints(game, attempt);
+			//string hints = _gameRepository.GetHints(game, attempt);
 
 			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
+			Assert.Equal("A", "B"); // This is a placeholder assertion, replace with actual hints retrieval logic.
+        }
 
 		[Fact]
 		public void GetHints_ThreeCorrectOneMissing_ResultReturned()
