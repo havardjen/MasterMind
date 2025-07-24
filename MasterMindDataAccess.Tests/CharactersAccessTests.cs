@@ -14,14 +14,13 @@ namespace MasterMindDataAccess.Tests
         }
 
 		ICharactersRepository _chars;
+        List<string> _expectedChars = new List<string> { "A", "B", "C", "D", "E", "F", "" };
 
-
-		[Fact]
+        [Fact]
 		public void VerifyValidCharacters_NoCharactersExist_AllCharactersCreated()
 		{
 			// Arrange
 			bool deleteAll = true;
-			List<string> expectedChars = new List<string> { "A", "B", "C", "D", "E", "F" };
 			_chars.DeleteChar("w", deleteAll);
 
 			// Act
@@ -29,17 +28,16 @@ namespace MasterMindDataAccess.Tests
 
 			// Assert
 			Assert.NotNull(allChars);
-			Assert.Equal(expectedChars.Count, allChars.Count);
+			Assert.Equal(_expectedChars.Count, allChars.Count);
 
-			for (int i = 0; i < expectedChars.Count; i++)
-				Assert.Equal(expectedChars[i], allChars[i]);
+			for (int i = 0; i < _expectedChars.Count; i++)
+				Assert.Equal(_expectedChars[i], allChars[i]);
 		}
 
 		[Fact]
 		public void VerifyValidCharacters_CharacterMissing_AllCharactersPopulated()
 		{
 			// Arrange
-			List<string> expectedChars = new List<string> { "A", "B", "C", "D", "E", "F" };
 			string charToDelete = "A";
 			_chars.DeleteChar(charToDelete);
 
@@ -48,10 +46,10 @@ namespace MasterMindDataAccess.Tests
 
 			// Assert
 			Assert.NotNull(allChars);
-			Assert.Equal(expectedChars.Count, allChars.Count);
+			Assert.Equal(_expectedChars.Count, allChars.Count);
 
-			for (int i = 0; i < expectedChars.Count; i++)
-				Assert.Equal(expectedChars[i], allChars[i]);
+			for (int i = 0; i < _expectedChars.Count; i++)
+				Assert.Equal(_expectedChars[i], allChars[i]);
 		}
 
 		[Theory]
@@ -59,7 +57,9 @@ namespace MasterMindDataAccess.Tests
 		[InlineData("A", "B", "C", "G", false)]
 		[InlineData("A", "_", "C", "D", false)]
 		[InlineData("A", "B", "C", "2", false)]
-		public void VerifyCharactersInGame_input_ExpectedResult(string val1, string val2, string val3, string val4, bool expectedResult)
+        [InlineData("A", "B", "C", "", true)]
+        [InlineData("a", "B", "C", "", true)]
+        public void VerifyCharactersInGame_input_ExpectedResult(string val1, string val2, string val3, string val4, bool expectedResult)
 		{
 			// Arrange
 			List<string> inputGame = new List<string> { val1, val2, val3, val4 };
@@ -93,7 +93,7 @@ namespace MasterMindDataAccess.Tests
 		{
 			// Arrange
 			bool getAll = true;
-			List<string> expectedChars = new List<string> { "A", "B", "C", "D", "E", "F" };
+			
 			_chars.VerifyValidCharacters();
 
 			// Act
@@ -101,10 +101,10 @@ namespace MasterMindDataAccess.Tests
 
 			// Assert
 			Assert.NotNull(allChars);
-			Assert.Equal(expectedChars.Count, allChars.Count);
+			Assert.Equal(_expectedChars.Count, allChars.Count);
 
-			for (int i = 0; i < expectedChars.Count; i++)
-				Assert.Equal(expectedChars[i], allChars[i]);
+			for (int i = 0; i < _expectedChars.Count; i++)
+				Assert.Equal(_expectedChars[i], allChars[i]);
 		}
 
 		[Fact]
@@ -117,10 +117,11 @@ namespace MasterMindDataAccess.Tests
 
 			// Act
 			_chars.DeleteChar("w", deleteAll);
-			int numChars = _chars.GetCharacter("w", getAll).Count;
+			var chars = _chars.GetCharacter("w", getAll);
 
 			// Assert
-			Assert.Equal(0, numChars);
+			Assert.Single(chars);
+			Assert.Equal("", chars[0]);
 		}
 
 		[Fact]

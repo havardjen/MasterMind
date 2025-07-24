@@ -44,10 +44,9 @@ namespace MasterMindDataAccess
 		{
 			int gameId = 0;
 
-			List<string> allCharsInDb = _charRepository.GetCharacter("w", true);
-			List<string> newGame = allCharsInDb.OrderBy(x => Guid.NewGuid()).Take(4).ToList();  // Sorting the list in a random order using Guid.
-																								// Then the first four items are picked.
-			var attemptTypes = GetAttemptTypes();
+            var allCharsInDb = _charRepository.GetCharacter("w", true);
+            var attempt = allCharsInDb.OrderBy(x => Guid.NewGuid()).Take(4).ToList();  // Sorting the list in a random order using Guid.
+                                                                                       // Then the first four items are picked.
 
             using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
@@ -63,18 +62,13 @@ namespace MasterMindDataAccess
 				queryText = "SELECT last_insert_rowid();";
 				cmd = new SQLiteCommand(queryText, conn);
 				gameId = Convert.ToInt32(cmd.ExecuteScalar());
-				var attemptTypeId = attemptTypes.Where(a => a.Value == AttemptType.Solution).FirstOrDefault().Key;
-
-                queryText = $@"INSERT INTO Attempt(GameId, ValueOne, ValueTwo, ValueThree, ValueFour, AttemptTypeId)
-							   VALUES({gameId}, '{newGame[0]}', '{newGame[1]}', '{newGame[2]}', '{newGame[3]}', {attemptTypeId});";
-
-                cmd = new SQLiteCommand(queryText, conn);
-                cmd.ExecuteNonQuery();
 
                 conn.Close();
 			}
 
-			return gameId;
+			RegisterAttempt(gameId, attempt, AttemptType.Solution);
+
+            return gameId;
 		}
 
 		public Game GetGame(int gameId)
@@ -104,42 +98,32 @@ namespace MasterMindDataAccess
 			return game;
 		}
 
-		public bool RegisterAttempt(int gameId, List<string> attempt)
+		public int RegisterAttempt(int gameId, List<string> attempt, AttemptType attemptType = AttemptType.Attempt)
 		{
-			bool result = false;
-
-			if (_charRepository.VerifyCharactersInGame(attempt))
+            var attemptId = 0;
+            var attemptTypes = GetAttemptTypes();
+            var attemptTypeId = attemptTypes.Where(a => a.Value == attemptType).FirstOrDefault().Key;
+            if (_charRepository.VerifyCharactersInGame(attempt))
 			{
 				using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 				{
-					string queryText = $@"INSERT INTO Game(Value1, Value2, Value3, Value4)
-									  VALUES('{attempt[0]}', '{attempt[1]}', '{attempt[2]}', '{attempt[3]}');";
+                    var queryText = $@"INSERT INTO Attempt(GameId, ValueOne, ValueTwo, ValueThree, ValueFour, AttemptTypeId)
+									   VALUES({gameId}, '{attempt[0].ToUpper()}', '{attempt[1].ToUpper()}', '{attempt[2].ToUpper()}', '{attempt[3].ToUpper()}', {attemptTypeId});";
 
-					SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
-
+					var cmd = new SQLiteCommand(queryText, conn);
 					conn.Open();
+                    gameId = Convert.ToInt32(cmd.ExecuteScalar());
 
-					cmd.ExecuteScalar();
-
-					queryText = "SELECT last_insert_rowid();";
-					cmd = new SQLiteCommand(queryText, conn);
-					int attemptId = Convert.ToInt32(cmd.ExecuteScalar());
-
-
-					queryText = $@"INSERT INTO Attempt(AttemptId, GameId)
-							   VALUES({attemptId}, {gameId});";
-					cmd = new SQLiteCommand(queryText, conn);
-					cmd.ExecuteNonQuery();
-
+                    queryText = "SELECT last_insert_rowid();";
+                    cmd = new SQLiteCommand(queryText, conn);
+                    attemptId = Convert.ToInt32(cmd.ExecuteScalar());
 					conn.Close();
-				}
-
-				result = true;
+                }
 			}
 			else
-				result = false;
+				attemptId = 0;
 
-			return result;
+			return attemptId;
 		}
 
 		/// <summary>
@@ -149,35 +133,41 @@ namespace MasterMindDataAccess
 		/// <param name="gameId"></param>
 		/// <param name="attempt"></param>
 		/// <returns></returns>
-		public string GetHints(List<string> game, List<string> attempt)
+		public string GetHints(int gameId)
 		{
-			string result = string.Empty;
-			Dictionary<string, int> ValidCharsCount = new Dictionary<string, int> { { "A", 0 }, { "B", 0 }, { "C", 0 }, { "D", 0 }, { "E", 0 }, { "F", 0 } };
+			var allAttempts = GetAttempts(gameId);
+            var solution = allAttempts.Where(a => a.AttemptType == AttemptType.Solution).Last();
+			var attempt = allAttempts.Where(a => a.AttemptType == AttemptType.Attempt).Last();
 
-			for (int i = 0; i < attempt.Count; i++)
-				attempt[i] = attempt[i].ToUpper();
+            string result = string.Empty;
+			var validCharsCount = new Dictionary<string, int> { { "A", 0 }, { "B", 0 }, { "C", 0 }, { "D", 0 }, { "E", 0 }, { "F", 0 }, { "", 0 } };
 
-			List<string> tmpHints = new List<string>();
+			attempt.ValueOne = attempt.ValueOne.ToUpper();
+			attempt.ValueTwo = attempt.ValueTwo.ToUpper();
+			attempt.ValueThree = attempt.ValueThree.ToUpper();
+			attempt.ValueFour = attempt.ValueFour.ToUpper();
+
+
+            List<string> tmpHints = new List<string>();
 			for(int i=0; i<4; i++)
 			{
-				if (attempt[i] == game[i])
+				if (attempt.ValuesList[i] == solution.ValuesList[i])
 				{
 					tmpHints.Add(CHAR_IN_CORRECT_POSITION);
-					ValidCharsCount[attempt[i]]++;
-				}
-					
+					validCharsCount[attempt.ValuesList[i]]++;
+				}	
 			}
 
 			for (int i = 0; i < 4; i++)
 			{
-				string attChar = attempt[i];
-				if ((attChar != game[i]))
+				string attChar = attempt.ValuesList[i];
+				if ((attChar != solution.ValuesList[i]))
 				{
-					int count = game.Where(x => x == attChar).Count();
+					int count = solution.ValuesList.Where(x => x == attChar).Count();
 
-					if(IsValidChar(attChar) && ValidCharsCount[attChar] < count)
+					if(IsValidChar(attChar) && validCharsCount[attChar] < count)
 					{
-						ValidCharsCount[attChar]++;
+						validCharsCount[attChar]++;
 						tmpHints.Add(CHAR_IN_WRONG_POSITION);
 					}
 				}
@@ -216,14 +206,79 @@ namespace MasterMindDataAccess
 
         public Attempt GetSolution(int gameId)
         {
-            var attempt = new Attempt();
+            var attempts = GetAttempts(gameId)
+				.Where(a => a.AttemptType == AttemptType.Solution);
+
+
+            return attempts.ElementAt(0);
+        }
+
+        public AttemptType GetAttemptType(int attempId)
+        {
+			AttemptType attemptType = AttemptType.NotAttempted;
+			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+			{
+				string queryText = @$"SELECT att.AttemptType
+									  FROM Attempt a
+									  JOIN AttemptType att ON att.AttemptTypeId = a.AttemptTypeId
+									  WHERE a.AttemptId = {attempId};";
+
+				SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+				conn.Open();
+
+                attemptType = Enum.Parse<AttemptType>(cmd.ExecuteScalar().ToString());
+
+				conn.Close();
+			}
+
+			return attemptType;
+        }
+
+        public List<Attempt> GetAttempts(int gameId)
+        {
+			var attempts = new List<Attempt>();
             using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
             {
                 string queryText = @$"SELECT a.ValueOne, a.ValueTwo, a.ValueThree, a.ValueFour, a.AttemptId, att.AttemptType
 									 FROM Attempt a
 									 JOIN AttemptType att ON att.AttemptTypeId = a.AttemptTypeId
-									 WHERE a.GameId = {gameId};
-									   AND att.AttempType = 'Solution'";
+									 WHERE a.GameId = {gameId};";
+
+                SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+						var attempt = new Attempt();
+                        attempt.GameId = gameId;
+                        attempt.AttemptId = Convert.ToInt32(reader["AttemptId"]);
+                        attempt.ValueOne = reader["ValueOne"].ToString();
+                        attempt.ValueTwo = reader["ValueTwo"].ToString();
+                        attempt.ValueThree = reader["ValueThree"].ToString();
+                        attempt.ValueFour = reader["ValueFour"].ToString();
+                        attempt.AttemptType = Enum.Parse<AttemptType>(reader["AttemptType"].ToString());
+
+						attempts.Add(attempt);
+                    }
+                }
+                conn.Close();
+            }
+
+			return attempts;
+        }
+
+        public Attempt GetAttempt(int attemptId)
+        {
+            var attempt = new Attempt();
+
+            using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+            {
+                string queryText = @$"SELECT a.GameId, a.ValueOne, a.ValueTwo, a.ValueThree, a.ValueFour, a.AttemptId, att.AttemptType
+									 FROM Attempt a
+									 JOIN AttemptType att ON att.AttemptTypeId = a.AttemptTypeId
+									 WHERE a.AttemptId = {attemptId};";
 
                 SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
 
@@ -232,13 +287,13 @@ namespace MasterMindDataAccess
                 {
                     if (reader.Read())
                     {
-                        attempt.GameId = gameId;
-						attempt.AttemptId	= Convert.ToInt32(reader["AttemptId"]);
-                        attempt.ValueOne	= reader["ValueOne"].ToString();
-                        attempt.ValueTwo	= reader["ValueTwo"].ToString();
-                        attempt.ValueThree	= reader["ValueThree"].ToString();
-                        attempt.ValueFour	= reader["ValueFour"].ToString();
-						attempt.AttemptType = Enum.Parse<AttemptType>(reader["AttemptType"].ToString());
+                        attempt.GameId = Convert.ToInt32(reader["GameId"]);
+                        attempt.AttemptId = Convert.ToInt32(reader["AttemptId"]);
+                        attempt.ValueOne = reader["ValueOne"].ToString().ToUpper();
+                        attempt.ValueTwo = reader["ValueTwo"].ToString().ToUpper();
+                        attempt.ValueThree = reader["ValueThree"].ToString().ToUpper();
+                        attempt.ValueFour = reader["ValueFour"].ToString().ToUpper();
+                        attempt.AttemptType = Enum.Parse<AttemptType>(reader["AttemptType"].ToString());
                     }
                 }
                 conn.Close();
@@ -246,5 +301,34 @@ namespace MasterMindDataAccess
 
             return attempt;
         }
+
+        public bool SaveAttempt(Attempt attempt)
+        {
+            var result = false;
+
+            if (_charRepository.VerifyCharactersInGame(attempt.ValuesList))
+            {
+                using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+                {
+                    var queryText = $@"UPDATE Attempt
+									   SET ValueOne   = '{attempt.ValueOne.ToUpper()}', 
+										   ValueTwo   = '{attempt.ValueTwo.ToUpper()}', 
+										   ValueThree = '{attempt.ValueThree.ToUpper()}',
+										   ValueFour  = '{attempt.ValueFour.ToUpper()}'
+									   WHERE AttemptId = {attempt.AttemptId}";
+
+                    var cmd = new SQLiteCommand(queryText, conn);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+
+					result = true;
+                }
+            }
+
+            return result;
+        }
+
+        
     }
 }

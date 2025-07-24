@@ -22,5 +22,7 @@ namespace MasterMindResources.Models
 		public string ValueThree { get; set; }
 		public string ValueFour { get; set; }
 		public string Hints { get; set; }
-	}
+
+        public List<string> ValuesList { get { return new List<string> { ValueOne, ValueTwo, ValueThree, ValueFour }; } }
+    }
 }

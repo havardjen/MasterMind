@@ -10,12 +10,17 @@ namespace MasterMindResources.Interfaces
 
 		Game GetGame(int gameId);
 
-		bool RegisterAttempt(int gameId, List<string> attempt);
-
-		string GetHints(List<string> game, List<string> attempt);
-
-		Dictionary<int, AttemptType> GetAttemptTypes();
+		string GetHints(int gameId);
 
 		Attempt GetSolution(int gameId);
+
+        int RegisterAttempt(int gameId, List<string> attempt, AttemptType attemptType = AttemptType.Attempt);
+        Dictionary<int, AttemptType> GetAttemptTypes();
+        
+		List<Attempt> GetAttempts(int gameId);
+		Attempt GetAttempt(int attemptId);
+
+        bool SaveAttempt(Attempt attempt);
+        AttemptType GetAttemptType(int attemptId);
     }
 }

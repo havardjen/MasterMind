@@ -9,14 +9,15 @@ namespace MasterMindDataAccess
 	{
 		public CharactersRepository(string connectionString)
 		{
-			VALID_CHARACTERS = new List<string> { "A", "B", "C", "D", "E", "F" };
-			_connectionString = connectionString;
+			VALID_CHARACTERS = new List<string> { "A", "B", "C", "D", "E", "F", "" };
+			NUM_VALID_CHARACTERS = VALID_CHARACTERS.Count;
+            _connectionString = connectionString;
 		}
 
 		private string _connectionString;
 
 		private readonly List<string> VALID_CHARACTERS;
-		private const int NUM_VALID_CHARACTERS = 6;
+		private readonly int NUM_VALID_CHARACTERS;
 
 
 		private List<string> GetAllValidCharactersFromDB()
@@ -30,15 +31,19 @@ namespace MasterMindDataAccess
 									 ORDER BY Character ASC";
 
 				SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
-				conn.Open();
-				SQLiteDataReader dr = cmd.ExecuteReader();
 
-				while (dr.Read())
-					result.Add(Convert.ToString(dr["Character"]));
+                conn.Open();
+                using (var dr = cmd.ExecuteReader())
+				{
+                    while (dr.Read())
+                        result.Add(Convert.ToString(dr["Character"]));
 
-				conn.Close();
+                    conn.Close();
+                }
+				
 			}
 
+			result.Add(string.Empty);
 			return result;
 		}
 
@@ -137,7 +142,7 @@ namespace MasterMindDataAccess
 
 			foreach (string c in game)
 			{
-				if(!VALID_CHARACTERS.Contains(c))
+				if(!VALID_CHARACTERS.Contains(c.ToUpper()))
 				{
 					result = false;
 					break;
