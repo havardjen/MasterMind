@@ -10,7 +10,7 @@ namespace MasterMindDataAccess.Tests
 		public CharactersAccessTests()
 		{
             //_chars = new CharactersRepository(@"Data Source = D:\OneDrive\Utvikling\MasterMind\MasterMindDB.db");
-            _chars = new CharactersRepository(@"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db");
+            _chars = new CharactersRepository(@"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindAPI\MasterMindDB.db");
         }
 
 		ICharactersRepository _chars;

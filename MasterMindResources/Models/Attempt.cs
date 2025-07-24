@@ -13,7 +13,11 @@ namespace MasterMindResources.Models
 
 		}
 
-		public string ValueOne { get; set; }
+        public int AttemptId { get; set; }
+        public AttemptType AttemptType { get; set; }
+        public int GameId { get; set; }
+
+        public string ValueOne { get; set; }
 		public string ValueTwo { get; set; }
 		public string ValueThree { get; set; }
 		public string ValueFour { get; set; }

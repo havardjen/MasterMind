@@ -1,6 +1,10 @@
-﻿using MasterMindResources.Interfaces;
+﻿using MasterMindResources;
+using MasterMindResources.Interfaces;
+using MasterMindResources.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Linq;
 using Xunit;
 
 namespace MasterMindDataAccess.Tests
@@ -10,30 +14,65 @@ namespace MasterMindDataAccess.Tests
 		public GameReposityTests()
 		{
             //string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
-            string connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindDB.db";
+            _connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MastermindAPI\MasterMindDB.db";
 
-			_characterRepository = new CharactersRepository(connectionString);
-            _gameRepository = new GameRepository(connectionString, _characterRepository);
+			_characterRepository = new CharactersRepository(_connectionString);
+            _gameRepository = new GameRepository(_connectionString, _characterRepository);
 		}
 
 		IGameRepository _gameRepository;
 		ICharactersRepository _characterRepository;
+		string _connectionString;
+
+        [Fact]
+        public void GetAttemptTypes_NoInput_BothAttemptTypesExist()
+        {
+            // Arrange
+
+            // Act
+            var attemptTypes = _gameRepository.GetAttemptTypes();
+
+            // Assert
+			Assert.NotNull(attemptTypes);
+            Assert.Equal(2, attemptTypes.Count);
+
+			Assert.True(attemptTypes.ElementAt(0).Key > 0);
+            Assert.Equal(AttemptType.Solution, attemptTypes.ElementAt(0).Value);
+            Assert.True(attemptTypes.ElementAt(1).Key > 0);
+			Assert.Equal(AttemptType.Attempt, attemptTypes.ElementAt(1).Value);
+        }
+
+		[Fact]
+		public void GetSolution_GameIdExists_SolutionReturned()
+		{
+			// Arrange
+			var gameId = 163;
+
+            // Act
+			var solution = _gameRepository.GetSolution(gameId);
+
+            // Assert
+			Assert.NotNull(solution);
+			Assert.Equal(AttemptType.Solution, solution.AttemptType);
+			AssertAllFourValuesAreSet(solution);
+            Assert.True(string.IsNullOrEmpty(solution.Hints));
+        }
 
         [Fact]
 		public void CreateGame_ValidCharacters_GameCreatedGameIdReturned()
 		{
             // Arrange
 
-            //TODO: Ensure that the first line in Attemps is marked as the solution. Preferably this line has a certain typeId(e.g. 1) to indicate it is the solution.
-
             // Act
             int gameId = _gameRepository.CreateGame();
 
-			// Assert
-			Assert.True(false);
-		}
+            // Assert
+            Assert.True(gameId > 0); 
+            var attempt = AssertOnlyOneRowInAttemptForNewlyCreatedGame(gameId, _connectionString);
+			AssertAllFourValuesAreSet(attempt);
+        }
 
-		[Fact]
+        [Fact]
 		public void GetGame_GameIdExists_GameReturned()
 		{
 			// Arrange
@@ -244,5 +283,54 @@ namespace MasterMindDataAccess.Tests
 			// Assert
 			Assert.Equal(expectedHints, hints);
 		}
-	}
+
+
+		private void AssertAllFourValuesAreSet(Attempt attempt)
+		{
+            Assert.False(string.IsNullOrWhiteSpace(attempt.ValueOne));
+            Assert.False(string.IsNullOrWhiteSpace(attempt.ValueTwo));
+            Assert.False(string.IsNullOrWhiteSpace(attempt.ValueThree));
+            Assert.False(string.IsNullOrWhiteSpace(attempt.ValueFour));
+        }
+
+		private Attempt AssertOnlyOneRowInAttemptForNewlyCreatedGame(int gameId, string connectionString)
+		{
+            var attempts = new List<Attempt>();
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                // Et nyopprettet spill skal ha kun èn rad, og det skal være en løsning.
+                string queryText = @$"SELECT a.ValueOne, a.ValueTwo, a.ValueThree, a.ValueFour, a.AttemptId, att.AttemptType
+									 FROM Attempt a
+									 JOIN AttemptType att ON att.AttemptTypeId = a.AttemptTypeId
+									 WHERE a.GameId = {gameId};";
+
+                SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+						var attempt = new Attempt();
+                        
+						attempt.GameId = gameId;
+                        attempt.AttemptId = Convert.ToInt32(reader["AttemptId"]);
+                        attempt.ValueOne = reader["ValueOne"].ToString();
+                        attempt.ValueTwo = reader["ValueTwo"].ToString();
+                        attempt.ValueThree = reader["ValueThree"].ToString();
+                        attempt.ValueFour = reader["ValueFour"].ToString();
+                        attempt.AttemptType = Enum.Parse<AttemptType>(reader["AttemptType"].ToString());
+
+						attempts.Add(attempt);	
+                    }
+                }
+                conn.Close();
+            }
+
+            Assert.Single(attempts);
+            Assert.Equal(AttemptType.Solution, attempts[0].AttemptType);
+
+			return attempts[0];
+        }
+    }
 }

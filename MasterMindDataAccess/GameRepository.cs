@@ -1,4 +1,5 @@
-﻿using MasterMindResources.Interfaces;
+﻿using MasterMindResources;
+using MasterMindResources.Interfaces;
 using MasterMindResources.Models;
 using System;
 using System.Collections.Generic;
@@ -46,12 +47,10 @@ namespace MasterMindDataAccess
 			List<string> allCharsInDb = _charRepository.GetCharacter("w", true);
 			List<string> newGame = allCharsInDb.OrderBy(x => Guid.NewGuid()).Take(4).ToList();  // Sorting the list in a random order using Guid.
 																								// Then the first four items are picked.
+			var attemptTypes = GetAttemptTypes();
 
-			using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+            using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 			{
-                //string queryText = $@"INSERT INTO Game(GameTypeId, Value1, Value2, Value3, Value4)
-                //					  VALUES('{gametypeId}', '{newGame[0]}', '{newGame[1]}', '{newGame[2]}', '{newGame[3]}');";
-
                 string queryText = $@"INSERT INTO Game(CreatedDate)
                 					  VALUES(datetime('now'));";
 
@@ -64,7 +63,15 @@ namespace MasterMindDataAccess
 				queryText = "SELECT last_insert_rowid();";
 				cmd = new SQLiteCommand(queryText, conn);
 				gameId = Convert.ToInt32(cmd.ExecuteScalar());
-				conn.Close();
+				var attemptTypeId = attemptTypes.Where(a => a.Value == AttemptType.Solution).FirstOrDefault().Key;
+
+                queryText = $@"INSERT INTO Attempt(GameId, ValueOne, ValueTwo, ValueThree, ValueFour, AttemptTypeId)
+							   VALUES({gameId}, '{newGame[0]}', '{newGame[1]}', '{newGame[2]}', '{newGame[3]}', {attemptTypeId});";
+
+                cmd = new SQLiteCommand(queryText, conn);
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
 			}
 
 			return gameId;
@@ -182,6 +189,62 @@ namespace MasterMindDataAccess
 				result += h;
 
 			return result;
-		} 
-	}
+		}
+
+        public Dictionary<int, AttemptType> GetAttemptTypes()
+        {
+            var attemptTypes =  new Dictionary<int, AttemptType>();
+            using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+            {
+                string queryText = @$"SELECT a.AttemptTypeId, a.AttemptType
+									  FROM AttemptType a
+									  ORDER BY a.AttemptType DESC;";
+
+                SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                        attemptTypes.Add(int.Parse(reader[0].ToString()), Enum.Parse<AttemptType>(reader[1].ToString()));
+                }
+                conn.Close();
+            }
+
+            return attemptTypes;
+        }
+
+        public Attempt GetSolution(int gameId)
+        {
+            var attempt = new Attempt();
+            using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
+            {
+                string queryText = @$"SELECT a.ValueOne, a.ValueTwo, a.ValueThree, a.ValueFour, a.AttemptId, att.AttemptType
+									 FROM Attempt a
+									 JOIN AttemptType att ON att.AttemptTypeId = a.AttemptTypeId
+									 WHERE a.GameId = {gameId};
+									   AND att.AttempType = 'Solution'";
+
+                SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
+
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        attempt.GameId = gameId;
+						attempt.AttemptId	= Convert.ToInt32(reader["AttemptId"]);
+                        attempt.ValueOne	= reader["ValueOne"].ToString();
+                        attempt.ValueTwo	= reader["ValueTwo"].ToString();
+                        attempt.ValueThree	= reader["ValueThree"].ToString();
+                        attempt.ValueFour	= reader["ValueFour"].ToString();
+						attempt.AttemptType = Enum.Parse<AttemptType>(reader["AttemptType"].ToString());
+                    }
+                }
+                conn.Close();
+            }
+
+            return attempt;
+        }
+    }
 }
