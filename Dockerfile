@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER root
+RUN apt-get update && apt-get install -y libsqlite3-dev
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
@@ -10,12 +12,6 @@ WORKDIR /src
 
 # Kopier alt inn i containeren (hele løsningen)
 COPY . .
-
-# Kopier utviklersertifikat inn i containeren
-COPY devCertificate.pfx .
-
-COPY MasterMindDB.db .
-
 
 WORKDIR /src/MasterMindAPI
 RUN dotnet restore "./MasterMindAPI.csproj"
@@ -29,10 +25,11 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-COPY MasterMindDB.db .
-
-# Kopier utviklersertifikat inn i den endelige containeren
+# Kopier sertifikat (ligger på roten)
 COPY devCertificate.pfx .
+
+# Sett miljøvariabler for HTTPS
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=crypticpassword
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/devCertificate.pfx
+
 ENTRYPOINT ["dotnet", "MasterMindAPI.dll"]
