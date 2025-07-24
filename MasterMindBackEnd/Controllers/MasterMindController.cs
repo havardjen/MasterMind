@@ -11,7 +11,6 @@ namespace MasterMindBackEnd.Controllers
 		public MasterMindController(ICharactersService charService, string connectionString)
         {
             _charactersService = charService;
-   //         _gameTypeAccessor = new GameTypeAccess(connectionString);
 			//_gameAccessor = new GameRepository(connectionString, _gameTypeAccessor, _charactersService.CharacterRepository);
 			
 		}

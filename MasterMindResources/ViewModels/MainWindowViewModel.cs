@@ -78,31 +78,6 @@ namespace MasterMindResources.ViewModels
 				_validCharacters = JsonConvert.DeserializeObject<List<string>>(await response.Content.ReadAsStringAsync());
 		}
 
-		public async void GetGameType(int gameTypeId)
-		{
-			string gameType = string.Empty;
-			string getGameTypeURL = $"{_baseURL}/GameType/{gameTypeId}";
-			HttpResponseMessage response = await _client.GetAsync(getGameTypeURL);
-
-			if(response.IsSuccessStatusCode)
-				gameType = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
-		}
-
-		public async void CreateGameType(string gameType)
-		{
-			string getGameTypeURL = $"{_baseURL}/GameType/Create/{gameType}";
-
-			StringContent queryString = new StringContent(gameType);
-			HttpResponseMessage response = await _client.PostAsync(new Uri(getGameTypeURL), queryString);
-
-			int gameTypeId = 0;
-			if (response.IsSuccessStatusCode)
-			{
-				string responseBody = await response.Content.ReadAsStringAsync();
-				gameTypeId = int.Parse(responseBody);
-			}
-		}
-
 		public async void CreateGame()
 		{
 			string createGameURL = $"{_baseURL}/Game/Create";

@@ -24,7 +24,6 @@ builder.Services.AddSingleton<string>(@"Data Source=MasterMindDB.db");
 builder.Services.AddSingleton<ICharactersRepository, CharactersRepository>();
 builder.Services.AddSingleton<ICharactersService, CharactersService>();
 builder.Services.AddSingleton<IGameRepository, GameRepository>();
-builder.Services.AddSingleton<IGameTypeRepository, GameTypeRepository>();
 
 var app = builder.Build();
 

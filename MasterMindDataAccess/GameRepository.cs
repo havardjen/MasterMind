@@ -11,18 +11,15 @@ namespace MasterMindDataAccess
 {
 	public class GameRepository : IGameRepository
 	{
-		public GameRepository(string connectionString, IGameTypeRepository gameTypeAccess, ICharactersRepository charRepository)
+		public GameRepository(string connectionString, ICharactersRepository charRepository)
 		{
             _connectionString = connectionString;
-			_gameTypeAccessor = gameTypeAccess;
 			_charRepository = charRepository;
 
 			_validCharacters = _charRepository.GetCharacter(string.Empty, true);
-			VerifyGameTypes();
 		}
 
 		string _connectionString;
-		IGameTypeRepository _gameTypeAccessor;
 		ICharactersRepository _charRepository;
 		List<string> _validCharacters;
 
@@ -31,22 +28,6 @@ namespace MasterMindDataAccess
 		private const string CHAR_IN_CORRECT_POSITION = "B";
 		private const string CHAR_IN_WRONG_POSITION = "W";
 
-		/// <summary>
-		/// Game and Attempt are the two essential game types.
-		/// Here we assure that they always exist.
-		/// </summary>
-		private void VerifyGameTypes()
-		{
-			int gameTypeId = _gameTypeAccessor.GetGameTypeIdByGameType(GAME);
-
-			if (!(gameTypeId > 0))
-				_gameTypeAccessor.CreateGameType(GAME);
-
-			gameTypeId = _gameTypeAccessor.GetGameTypeIdByGameType(ATTEMPT);
-
-			if (!(gameTypeId > 0))
-				_gameTypeAccessor.CreateGameType(ATTEMPT);
-		}
 
 		private bool IsValidChar(string charToTest)
 		{
@@ -61,7 +42,6 @@ namespace MasterMindDataAccess
 		public int CreateGame()
 		{
 			int gameId = 0;
-			int gametypeId = _gameTypeAccessor.GetGameTypeIdByGameType(GAME);
 
 			List<string> allCharsInDb = _charRepository.GetCharacter("w", true);
 			List<string> newGame = allCharsInDb.OrderBy(x => Guid.NewGuid()).Take(4).ToList();  // Sorting the list in a random order using Guid.
@@ -120,14 +100,13 @@ namespace MasterMindDataAccess
 		public bool RegisterAttempt(int gameId, List<string> attempt)
 		{
 			bool result = false;
-			int attemptTypeId = _gameTypeAccessor.GetGameTypeIdByGameType(ATTEMPT);
 
 			if (_charRepository.VerifyCharactersInGame(attempt))
 			{
 				using (SQLiteConnection conn = new SQLiteConnection(_connectionString))
 				{
-					string queryText = $@"INSERT INTO Game(GameTypeId, Value1, Value2, Value3, Value4)
-									  VALUES('{attemptTypeId}', '{attempt[0]}', '{attempt[1]}', '{attempt[2]}', '{attempt[3]}');";
+					string queryText = $@"INSERT INTO Game(Value1, Value2, Value3, Value4)
+									  VALUES('{attempt[0]}', '{attempt[1]}', '{attempt[2]}', '{attempt[3]}');";
 
 					SQLiteCommand cmd = new SQLiteCommand(queryText, conn);
 
