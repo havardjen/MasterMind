@@ -314,7 +314,8 @@ namespace MasterMindDataAccess
 									   SET ValueOne   = '{attempt.ValueOne.ToUpper()}', 
 										   ValueTwo   = '{attempt.ValueTwo.ToUpper()}', 
 										   ValueThree = '{attempt.ValueThree.ToUpper()}',
-										   ValueFour  = '{attempt.ValueFour.ToUpper()}'
+										   ValueFour  = '{attempt.ValueFour.ToUpper()}',
+										   ModifiedDate = datetime('now')
 									   WHERE AttemptId = {attempt.AttemptId}";
 
                     var cmd = new SQLiteCommand(queryText, conn);

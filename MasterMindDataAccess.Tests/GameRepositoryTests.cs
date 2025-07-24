@@ -332,9 +332,10 @@ namespace MasterMindDataAccess.Tests
             var attempt = SetValuesForLastAttemptToAllSameCharacter(_gameId, "C");
 
             // Act
-            _gameRepository.SaveAttempt(attempt);
+            var result = _gameRepository.SaveAttempt(attempt);
 
             // Assert
+            Assert.True(result);
             var attemptInDb = _gameRepository.GetAttempt(attempt.AttemptId);
             Assert.NotNull(attemptInDb);
 			AssertAttemptHasExpectedValues(attemptInDb, attempt);
