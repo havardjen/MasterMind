@@ -25,11 +25,11 @@ namespace MasterMindResources.ViewModels
 			CreateGameCommand = new GeneralNoParameterCommand(CreateGame);
 			AttemptGameCommand = new GeneralNoParameterCommand(() =>
 			{
-				ValueOne = string.IsNullOrWhiteSpace(ValueOne)		? "Q" : ValueOne.ToUpper();
-				ValueTwo = string.IsNullOrWhiteSpace(ValueTwo)		? "Q" : ValueTwo.ToUpper();
-				ValueThree = string.IsNullOrWhiteSpace(ValueThree)	? "Q" : ValueThree.ToUpper();
-				ValueFour = string.IsNullOrWhiteSpace(ValueFour)	? "Q" : ValueFour.ToUpper();
-				OnPropertyChanged("ValueOne");
+				ValueOne	= string.IsNullOrWhiteSpace(ValueOne)	? string.Empty : ValueOne;
+                ValueTwo	= string.IsNullOrWhiteSpace(ValueTwo)	? string.Empty : ValueTwo;
+                ValueThree	= string.IsNullOrWhiteSpace(ValueThree)	? string.Empty : ValueThree;
+                ValueFour	= string.IsNullOrWhiteSpace(ValueFour)	? string.Empty : ValueFour;
+                OnPropertyChanged("ValueOne");
 				OnPropertyChanged("ValueTwo");
 				OnPropertyChanged("ValueThree");
 				OnPropertyChanged("ValueFour");

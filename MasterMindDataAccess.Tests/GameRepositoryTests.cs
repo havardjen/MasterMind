@@ -90,23 +90,6 @@ namespace MasterMindDataAccess.Tests
 		}
 
         [Fact]
-        public void RegisterAttempt_AtLeastOneEmptyValue_AttemptRegisteredTrueReturned()
-        {
-            // Arrange
-            var allCharsInDb = _characterRepository.GetCharacter("w", true);
-            var attempt = allCharsInDb.OrderBy(x => Guid.NewGuid()).Take(4).ToList();  // Sorting the list in a random order using Guid.
-                                                                                       // Then the first four items are picked.
-            attempt[2] = string.Empty;
-
-            // Act
-            var attemptId = _gameRepository.RegisterAttempt(_gameId, attempt);
-
-            // Assert
-            Assert.True(attemptId > 0);
-            AssertAttemptIsOfCorrectType(attemptId, AttemptType.Attempt);
-        }
-
-        [Fact]
         public void RegisterAttempt_LeastOneLowerCase_AttemptRegisteredTrueReturned()
         {
             // Arrange
@@ -201,21 +184,6 @@ namespace MasterMindDataAccess.Tests
         }
 
         [Fact]
-		public void SaveAttempt_TwoEmptyValues_AttemptSaved()
-		{
-			// Arrange
-			var attempt = GetValuesForLastAttemptTo1stMissing2ndCorr3rdWrongPos4thMissing(_gameId);
-
-			// Act
-			_gameRepository.SaveAttempt(attempt);
-
-            // Assert
-			var attemptInDb = _gameRepository.GetAttempt(attempt.AttemptId);
-			Assert.NotNull(attemptInDb);
-			AssertAttemptHasExpectedValues(attemptInDb, attempt);
-        }
-
-        [Fact]
         public void SaveAttempt_AllLowerCase_AttemptSavedAllUpper()
         {
             // Arrange
@@ -234,18 +202,6 @@ namespace MasterMindDataAccess.Tests
         private Attempt GetLastAttempt(int gameId)
         {
             var lastAttempt = _gameRepository.GetAttempts(gameId).Last();
-            return lastAttempt;
-        }
-
-        private Attempt GetValuesForLastAttemptTo1stMissing2ndCorr3rdWrongPos4thMissing(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = string.Empty;
-            lastAttempt.ValueTwo = "B";
-            lastAttempt.ValueThree = "D";
-            lastAttempt.ValueFour = string.Empty;
-
             return lastAttempt;
         }
 

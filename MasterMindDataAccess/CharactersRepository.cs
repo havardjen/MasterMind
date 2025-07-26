@@ -9,7 +9,7 @@ namespace MasterMindDataAccess
 	{
 		public CharactersRepository(string connectionString)
 		{
-			VALID_CHARACTERS = new List<string> { "A", "B", "C", "D", "E", "F", "" };
+			VALID_CHARACTERS = new List<string> { "A", "B", "C", "D", "E", "F" };
 			NUM_VALID_CHARACTERS = VALID_CHARACTERS.Count;
             _connectionString = connectionString;
 		}
@@ -40,10 +40,8 @@ namespace MasterMindDataAccess
 
                     conn.Close();
                 }
-				
 			}
 
-			result.Add(string.Empty);
 			return result;
 		}
 

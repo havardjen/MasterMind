@@ -13,7 +13,7 @@ namespace MasterMindDataAccess.Tests
         }
 
 		ICharactersRepository _chars;
-        List<string> _expectedChars = new List<string> { "A", "B", "C", "D", "E", "F", "" };
+        List<string> _expectedChars = new List<string> { "A", "B", "C", "D", "E", "F" };
 
         [Fact]
 		public void VerifyValidCharacters_NoCharactersExist_AllCharactersCreated()
@@ -56,8 +56,8 @@ namespace MasterMindDataAccess.Tests
 		[InlineData("A", "B", "C", "G", false)]
 		[InlineData("A", "_", "C", "D", false)]
 		[InlineData("A", "B", "C", "2", false)]
-        [InlineData("A", "B", "C", "", true)]
-        [InlineData("a", "B", "C", "", true)]
+        [InlineData("A", "B", "C", "", false)]
+        [InlineData("a", "B", "C", "", false)]
         public void VerifyCharactersInGame_input_ExpectedResult(string val1, string val2, string val3, string val4, bool expectedResult)
 		{
 			// Arrange
@@ -119,8 +119,8 @@ namespace MasterMindDataAccess.Tests
 			var chars = _chars.GetCharacter("w", getAll);
 
 			// Assert
-			Assert.Single(chars);
-			Assert.Equal("", chars[0]);
+			Assert.NotNull(chars);
+            Assert.Empty(chars);
 		}
 
 		[Fact]

@@ -1,5 +1,6 @@
 ﻿using MasterMindResources;
 using MasterMindResources.Interfaces;
+using MasterMindResources.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,18 @@ namespace MasterMindService
         {
             var allAttempts = _gameRepository.GetAttempts(gameId);
             var solution = allAttempts.Where(a => a.AttemptType == AttemptType.Solution).Last();
-            var attempt = allAttempts.Where(a => a.AttemptType == AttemptType.Attempt).Last();
+
+            Attempt attempt;
+            try
+            {
+                attempt = allAttempts.Where(a => a.AttemptType == AttemptType.Attempt).Last();
+            }
+            catch (InvalidOperationException)
+            {
+                // No attempts made yet, return empty hints
+                return string.Empty;
+            }
+
 
             string result = string.Empty;
             var validCharsCount = new Dictionary<string, int> { { "A", 0 }, { "B", 0 }, { "C", 0 }, { "D", 0 }, { "E", 0 }, { "F", 0 }, { "", 0 } };
