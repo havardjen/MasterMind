@@ -1,10 +1,12 @@
 ﻿
 using MasterMindResources.Commands;
 using MasterMindResources.Models;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Windows.Input;
 
@@ -32,8 +34,7 @@ namespace MasterMindResources.ViewModels
 				OnPropertyChanged("ValueThree");
 				OnPropertyChanged("ValueFour");
 
-				string completeAttempt = $"{_gameId}_{ValueOne}{ValueTwo}{ValueThree}{ValueFour}";
-				AttemptGame(completeAttempt);
+				AttemptGame();
 			});
 		}
 
@@ -59,7 +60,9 @@ namespace MasterMindResources.ViewModels
 		public string ValueThree { get; set; }
 		public string ValueFour { get; set; }
 
-		public bool CanGuessGame { get { return _gameId > 0; } }
+        public int GameId { get { return _gameId; } }
+
+        public bool CanGuessGame { get { return _gameId > 0; } }
 		public ObservableCollection<Attempt> Attempts { get; set; }
 
 		public ICommand CreateGameCommand { get; set; }
@@ -87,29 +90,38 @@ namespace MasterMindResources.ViewModels
 				_gameId = JsonConvert.DeserializeObject<int>(await response.Content.ReadAsStringAsync());
 
 			OnPropertyChanged(nameof(CanGuessGame));
-		}
+			OnPropertyChanged(nameof(GameId));
+        }
 
-		public async void AttemptGame(string completeAttempt)
-		{
-			string attemptGameURL = $"{_baseURL}/Game/Attempt/{completeAttempt}";
+        public async void AttemptGame()
+        {
+            var attempt = new List<string> { ValueOne, ValueTwo, ValueThree, ValueFour };
 
-			StringContent queryString = new StringContent(completeAttempt);
-			HttpResponseMessage response = await _client.PostAsync(new Uri(attemptGameURL), queryString);
+            var request = new AttemptRequest
+            {
+                GameId = _gameId,
+                Attempt = attempt
+            };
 
-			_hints = string.Empty;
-			if (response.IsSuccessStatusCode)
-				_hints = JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-			Attempt newAttempt = new Attempt
-			{
-				ValueOne = ValueOne,
-				ValueTwo = ValueTwo,
-				ValueThree = ValueThree,
-				ValueFour = ValueFour,
-				Hints = _hints
-			};
+            var response = await _client.PostAsync(new Uri(_baseURL + "/game/attempt"), content);
 
-			Attempts.Add(newAttempt);
-		}
-	}
+            _hints = string.Empty;
+            if (response.IsSuccessStatusCode)
+                _hints = await response.Content.ReadAsStringAsync();
+
+            Attempt newAttempt = new Attempt
+            {
+                ValueOne = ValueOne,
+                ValueTwo = ValueTwo,
+                ValueThree = ValueThree,
+                ValueFour = ValueFour,
+                Hints = _hints
+            };
+
+            Attempts.Add(newAttempt);
+        }
+    }
 }

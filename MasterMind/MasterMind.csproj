@@ -9,11 +9,20 @@
   <ItemGroup>
     <ProjectReference Include="..\MasterMindResources\MasterMindResources.csproj" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.7" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.119" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

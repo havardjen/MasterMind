@@ -46,5 +46,13 @@ namespace MasterMindAPI.Controllers
         {
             return Ok(_gameRepository.GetGame(gameId));
         }
+
+        [HttpPost, Route("Game/Attempt")]
+        public ActionResult<string> AttemptGame([FromBody]AttemptRequest attempt)
+        {
+            _gameRepository.RegisterAttempt(attempt.GameId, attempt.Attempt);
+
+            return Ok(_charactersService.GetHints(attempt.GameId));
+        }
     }
 }

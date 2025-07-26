@@ -35,7 +35,8 @@
 			<Button Content="New game"
 					Command="{Binding CreateGameCommand}"
 					ToolTip="This will verify your attempt towards the solution, it also activates the Guess button."/>
-		</StackPanel>
+            <TextBlock Text="{Binding GameId}" />
+        </StackPanel>
 		<ScrollViewer DockPanel.Dock="Top"
 					  VerticalScrollBarVisibility="Auto">
 			<ListView Margin="10"
