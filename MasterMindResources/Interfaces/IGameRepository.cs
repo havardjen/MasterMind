@@ -9,18 +9,19 @@ namespace MasterMindResources.Interfaces
 		int CreateGame();
 
 		Game GetGame(int gameId);
-
-		string GetHints(int gameId);
-
+		
 		Attempt GetSolution(int gameId);
 
         int RegisterAttempt(int gameId, List<string> attempt, AttemptType attemptType = AttemptType.Attempt);
+
         Dictionary<int, AttemptType> GetAttemptTypes();
         
 		List<Attempt> GetAttempts(int gameId);
+
 		Attempt GetAttempt(int attemptId);
 
         bool SaveAttempt(Attempt attempt);
+
         AttemptType GetAttemptType(int attemptId);
     }
 }

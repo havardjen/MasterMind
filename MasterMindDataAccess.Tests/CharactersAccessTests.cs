@@ -1,5 +1,4 @@
 ﻿using MasterMindResources.Interfaces;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -9,8 +8,8 @@ namespace MasterMindDataAccess.Tests
 	{
 		public CharactersAccessTests()
 		{
-            //_chars = new CharactersRepository(@"Data Source = D:\OneDrive\Utvikling\MasterMind\MasterMindDB.db");
-            _chars = new CharactersRepository(@"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindAPI\MasterMindDB.db");
+            _chars = new CharactersRepository(@"Data Source = C:\Users\havar\OneDrive\Utvikling\MasterMind\MasterMindAPI\MasterMindDB.db");
+            //_chars = new CharactersRepository(@"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MasterMindAPI\MasterMindDB.db");
         }
 
 		ICharactersRepository _chars;

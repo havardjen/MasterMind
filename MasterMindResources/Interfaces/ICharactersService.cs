@@ -8,5 +8,7 @@ namespace MasterMindResources.Interfaces
 		List<string> GetCharacter(string charToGet, bool getAll = false);
 
         public ICharactersRepository CharacterRepository { get; }
+
+        string GetHints(int gameId);
     }
 }

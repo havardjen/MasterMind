@@ -17,28 +17,15 @@ namespace MasterMindDataAccess
             _connectionString = connectionString;
 			_charRepository = charRepository;
 
-			_validCharacters = _charRepository.GetCharacter(string.Empty, true);
+			
 		}
 
 		string _connectionString;
 		ICharactersRepository _charRepository;
-		List<string> _validCharacters;
-
+		
 		private const string GAME = "Game";
 		private const string ATTEMPT = "Attempt";
-		private const string CHAR_IN_CORRECT_POSITION = "B";
-		private const string CHAR_IN_WRONG_POSITION = "W";
-
-
-		private bool IsValidChar(string charToTest)
-		{
-			bool isValid = false;
-
-			if (_validCharacters.Contains(charToTest))
-				isValid = true;
-
-			return isValid;
-		}
+		
 
 		public int CreateGame()
 		{
@@ -124,61 +111,6 @@ namespace MasterMindDataAccess
 				attemptId = 0;
 
 			return attemptId;
-		}
-
-		/// <summary>
-		/// Fetches hints for the current attempt.
-		/// Hints are sorted alphabetically, so that the cannot be linked to a particular position.
-		/// </summary>
-		/// <param name="gameId"></param>
-		/// <param name="attempt"></param>
-		/// <returns></returns>
-		public string GetHints(int gameId)
-		{
-			var allAttempts = GetAttempts(gameId);
-            var solution = allAttempts.Where(a => a.AttemptType == AttemptType.Solution).Last();
-			var attempt = allAttempts.Where(a => a.AttemptType == AttemptType.Attempt).Last();
-
-            string result = string.Empty;
-			var validCharsCount = new Dictionary<string, int> { { "A", 0 }, { "B", 0 }, { "C", 0 }, { "D", 0 }, { "E", 0 }, { "F", 0 }, { "", 0 } };
-
-			attempt.ValueOne = attempt.ValueOne.ToUpper();
-			attempt.ValueTwo = attempt.ValueTwo.ToUpper();
-			attempt.ValueThree = attempt.ValueThree.ToUpper();
-			attempt.ValueFour = attempt.ValueFour.ToUpper();
-
-
-            List<string> tmpHints = new List<string>();
-			for(int i=0; i<4; i++)
-			{
-				if (attempt.ValuesList[i] == solution.ValuesList[i])
-				{
-					tmpHints.Add(CHAR_IN_CORRECT_POSITION);
-					validCharsCount[attempt.ValuesList[i]]++;
-				}	
-			}
-
-			for (int i = 0; i < 4; i++)
-			{
-				string attChar = attempt.ValuesList[i];
-				if ((attChar != solution.ValuesList[i]))
-				{
-					int count = solution.ValuesList.Where(x => x == attChar).Count();
-
-					if(IsValidChar(attChar) && validCharsCount[attChar] < count)
-					{
-						validCharsCount[attChar]++;
-						tmpHints.Add(CHAR_IN_WRONG_POSITION);
-					}
-				}
-					
-			}
-
-			tmpHints.Sort();
-			foreach (string h in tmpHints)
-				result += h;
-
-			return result;
 		}
 
         public Dictionary<int, AttemptType> GetAttemptTypes()

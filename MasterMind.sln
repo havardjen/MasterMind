@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMindService.Tests", "MasterMindService.Tests\MasterMindService.Tests.csproj", "{C4930C08-6690-43D8-86A6-82784AE4B93B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB711D0C-1E60-4210-8C0C-F65B5F76C406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4930C08-6690-43D8-86A6-82784AE4B93B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4930C08-6690-43D8-86A6-82784AE4B93B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4930C08-6690-43D8-86A6-82784AE4B93B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4930C08-6690-43D8-86A6-82784AE4B93B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

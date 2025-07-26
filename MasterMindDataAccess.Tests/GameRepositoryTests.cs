@@ -13,10 +13,10 @@ namespace MasterMindDataAccess.Tests
 	{
 		public GameReposityTests()
 		{
-            //string connectionString = @"D:\OneDrive\Utvikling\MasterMind";
-            _connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MastermindAPI\MasterMindDB.db";
+            _connectionString = @"Data Source = C:\Users\havar\OneDrive\Utvikling\MasterMind\MasterMindAPI\MasterMindDB.db";
+            //_connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MastermindAPI\MasterMindDB.db";
 
-			_characterRepository = new CharactersRepository(_connectionString);
+            _characterRepository = new CharactersRepository(_connectionString);
             _gameRepository = new GameRepository(_connectionString, _characterRepository);
 
 			_gameId = 163; // This is a hardcoded _gameId for testing purposes, assuming it exists in the database.
@@ -157,147 +157,6 @@ namespace MasterMindDataAccess.Tests
         }
 
         [Fact]
-		public void GetHints_NoCharsInCorrPos_ResultReturned()
-		{
-            // Arrange
-            SetValuesForLastAttemptToCorrectCharactersWrongPositions(_gameId);
-            string expectedHints = "WWWW";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-        }
-
-		[Fact]
-		public void GetHints_FourEqualCharsOneInCorrPos_ResultReturned()
-		{
-            // Arrange
-			var attempt = SetValuesForLastAttemptToAllSameCharacter(_gameId);
-            SaveAttempt(attempt);
-            string expectedHints = "B";
-			
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-		[Fact]
-		public void GetHints_AllCharsInCorrectPosition_ResultReturned()
-		{
-            // Arrange
-            SetValuesForLastAttemptEqualToSolution(_gameId);
-            string expectedHints = "BBBB";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-        }
-
-		[Fact]
-		public void GetHints_AllCharsCorrPossLowerCase_ResultReturned()
-		{
-			// Arrange
-			SetValuesForLastAttemptEqualToSolutionAndAllLowerCase(_gameId);
-            string expectedHints = "BBBB";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-        }
-
-		[Fact]
-		public void GetHints_ThreeCorrectOneMissing_ResultReturned()
-		{
-			// Arrange
-			SetValuesForLastAttemptToThreeCorrectOneMissing(_gameId);
-            string expectedHints = "BBB";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-		[Fact]
-		public void GetHints_1stNotInGame2ndWrongPos3rd4thCorrect_ResultReturned()
-		{
-            // Arrange
-            SetValuesForLastAttemptTo1stNotInGame2ndWrongPos3rd4thCorrect(_gameId);
-            string expectedHints = "BBW";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-		[Fact]
-		public void GetHints_1st2ndCorrPos3rd4thMissing_ResultReturned()
-		{
-			// Arrange
-            SetValuesForLastAttemptTo1st2ndCorrPos3rd4thMissing(_gameId);
-            string expectedHints = "BB";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-		[Fact]
-		public void GetHints_1stWrongPos2ndCorr3rdWrongPos4thMissing_ResultReturned()
-		{
-			// Arrange
-            SetValuesForLastAttemptTo1stWrongPos2ndCorr3rdWrongPos4thMissing(_gameId);
-            string expectedHints = "BWW";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-		[Fact]
-		public void GetHints_1stMissing2ndCorr3rdWrongPos4thMissing_ResultReturned()
-		{
-            // Arrange
-            SetValuesForLastAttemptTo1stMissing2ndCorr3rdWrongPos4thMissing(_gameId);
-            string expectedHints = "BW";
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-		[Fact]
-		public void GetHints_NoUsedChars_EmptyHints()
-		{
-            // Arrange
-            SetValuesForLastAttemptToNoUsedCharacters(_gameId);
-			string expectedHints = string.Empty;
-
-			// Act
-			string hints = _gameRepository.GetHints(_gameId);
-
-			// Assert
-			Assert.Equal(expectedHints, hints);
-		}
-
-        [Fact]
         public void GetAttempt_ValidInput_AttemptIsFetched()
         {
             // Arrange
@@ -371,34 +230,11 @@ namespace MasterMindDataAccess.Tests
             AssertAttemptHasExpectedValues(attemptInDb, attempt);
         }
 
+
         private Attempt GetLastAttempt(int gameId)
         {
             var lastAttempt = _gameRepository.GetAttempts(gameId).Last();
             return lastAttempt;
-        }
-
-        private void SetValuesForLastAttemptToCorrectCharactersWrongPositions(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = "B";
-            lastAttempt.ValueTwo = "A";
-            lastAttempt.ValueThree = "D";
-            lastAttempt.ValueFour = "C";
-
-            SaveAttempt(lastAttempt);
-        }
-
-        private void SetValuesForLastAttemptToNoUsedCharacters(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = "E";
-            lastAttempt.ValueTwo = "F";
-            lastAttempt.ValueThree = "E";
-            lastAttempt.ValueFour = "F";
-
-            SaveAttempt(lastAttempt);
         }
 
         private Attempt GetValuesForLastAttemptTo1stMissing2ndCorr3rdWrongPos4thMissing(int gameId)
@@ -411,66 +247,6 @@ namespace MasterMindDataAccess.Tests
             lastAttempt.ValueFour = string.Empty;
 
             return lastAttempt;
-        }
-
-        private void SetValuesForLastAttemptTo1stMissing2ndCorr3rdWrongPos4thMissing(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = string.Empty;
-            lastAttempt.ValueTwo = "B";
-            lastAttempt.ValueThree = "D";
-            lastAttempt.ValueFour = string.Empty;
-
-            _gameRepository.SaveAttempt(lastAttempt);
-        }
-
-        private void SetValuesForLastAttemptTo1stWrongPos2ndCorr3rdWrongPos4thMissing(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = "C";
-            lastAttempt.ValueTwo = "B";
-            lastAttempt.ValueThree = "D";
-            lastAttempt.ValueFour = "E";
-
-            _gameRepository.SaveAttempt(lastAttempt);
-        }
-
-        private void SetValuesForLastAttemptTo1st2ndCorrPos3rd4thMissing(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = "A";
-            lastAttempt.ValueTwo = "B";
-            lastAttempt.ValueThree = "F";
-            lastAttempt.ValueFour = "E";
-
-            _gameRepository.SaveAttempt(lastAttempt);
-        }
-
-        private void SetValuesForLastAttemptTo1stNotInGame2ndWrongPos3rd4thCorrect(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = "E";
-            lastAttempt.ValueTwo = "A";
-            lastAttempt.ValueThree = "C";
-            lastAttempt.ValueFour = "D";
-
-            _gameRepository.SaveAttempt(lastAttempt);
-        }
-
-        private void SetValuesForLastAttemptToThreeCorrectOneMissing(int gameId)
-        {
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = "A";
-            lastAttempt.ValueTwo = "B";
-            lastAttempt.ValueThree = "C";
-            lastAttempt.ValueFour = string.Empty;
-
-            _gameRepository.SaveAttempt(lastAttempt);
         }
 
         private Attempt SetValuesForLastAttemptToAllSameCharacter(int gameId, string character = "A")
@@ -495,36 +271,6 @@ namespace MasterMindDataAccess.Tests
             lastAttempt.ValueFour	= lastAttempt.ValueFour.ToLower();
 
 			SaveAttempt(lastAttempt);
-
-            return lastAttempt;
-        }
-
-        private Attempt SetValuesForLastAttemptEqualToSolutionAndAllLowerCase(int gameId)
-        {
-            var solution = _gameRepository.GetSolution(gameId);
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne    = solution.ValueOne.ToLower();
-            lastAttempt.ValueTwo    = solution.ValueTwo.ToLower();
-            lastAttempt.ValueThree  = solution.ValueThree.ToLower();
-            lastAttempt.ValueFour   = solution.ValueFour.ToLower();
-
-            SaveAttempt(lastAttempt);
-
-            return lastAttempt;
-        }
-
-        private Attempt SetValuesForLastAttemptEqualToSolution(int gameId)
-        {
-            var solution = _gameRepository.GetSolution(gameId);
-            var lastAttempt = GetLastAttempt(gameId);
-
-            lastAttempt.ValueOne = solution.ValueOne;
-            lastAttempt.ValueTwo = solution.ValueTwo;
-            lastAttempt.ValueThree = solution.ValueThree;
-            lastAttempt.ValueFour = solution.ValueFour;
-
-            SaveAttempt(lastAttempt);
 
             return lastAttempt;
         }
