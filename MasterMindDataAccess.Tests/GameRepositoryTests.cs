@@ -13,8 +13,8 @@ namespace MasterMindDataAccess.Tests
 	{
 		public GameReposityTests()
 		{
-            _connectionString = @"Data Source = C:\Users\havar\OneDrive\Utvikling\MasterMind\MasterMindAPI\MasterMindDB.db";
-            //_connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MastermindAPI\MasterMindDB.db";
+            //_connectionString = @"Data Source = C:\Users\havar\OneDrive\Utvikling\MasterMind\MasterMindAPI\MasterMindDB.db";
+            _connectionString = @"Data Source=C:\Users\jensaas_h\source\repos\MasterMind\MastermindAPI\MasterMindDB.db";
 
             _characterRepository = new CharactersRepository(_connectionString);
             _gameRepository = new GameRepository(_connectionString, _characterRepository);
